@@ -1,0 +1,62 @@
+name: Lint, test and Build Postgres Management image
+
+on:
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'postgres-management/**'
+
+  # Allows manual trigger
+  workflow_dispatch:
+
+env:
+  CONTAINER_NAME: postgres-management 
+  IMAGE_TAG: ${{ github.sha }}
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+        pip install -r ./postgres-management/requirements.txt
+
+    - name: Run pylint
+      run: |
+        pylint postgres-management/src postgres-management/tests --rcfile=postgres-management/.pylintrc
+
+    - name: Run pytest
+      run: |
+        pytest postgres-management
+
+    - name: Hadolint
+      uses: hadolint/hadolint-action@v1.5.0
+      with:
+        dockerfile: postgres-management/Dockerfile
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Build Docker image
+      working-directory: ./postgres-management
+      id: build-image
+      run: |
+        docker build -t $CONTAINER_NAME:$IMAGE_TAG .
