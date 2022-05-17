@@ -1,0 +1,16 @@
+CREATE OR REPLACE FUNCTION fn_selectTemplate
+(
+
+) 
+returns TABLE 
+(
+
+) 
+AS 
+$BODY$
+BEGIN
+
+
+END;
+$BODY$
+LANGUAGE plpgsql VOLATILE SECURITY DEFINER COST 100;

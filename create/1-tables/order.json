@@ -1,0 +1,17 @@
+{
+  "1": "tbl-handled-block.sql",
+  "2": "tbl-fungible.sql",
+  "3": "tbl-nonfungible.sql",
+  "4": "tbl-proxy-contract.sql",
+  "5": "tbl-verified-contract.sql",
+  "6": "tbl-nonfungible-token.sql",
+  "7": "tbl-static-listing.sql",
+  "8": "tbl-static-delisting.sql",
+  "9": "tbl-static-sale.sql",
+  "10": "tbl-exclude-contract.sql",
+  "11": "tbl-advertise-contract.sql",
+  "12": "tbl-advertise-card.sql",
+  "13": "tbl-calendar-event.sql",
+  "14": "tbl-domain-lookup.sql",
+  "15": "tbl-deployments.sql"
+}
