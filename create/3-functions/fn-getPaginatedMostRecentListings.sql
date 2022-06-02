@@ -57,6 +57,7 @@ RETURN QUERY
 		SELECT listing_id
 		FROM tbl_static_sale
 	)
+	AND tec.exclude_id IS NULL
 
 	ORDER BY tsl.static_order_id
 
