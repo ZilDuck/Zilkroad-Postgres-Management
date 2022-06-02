@@ -36,17 +36,17 @@ RETURN QUERY
     on tnf.nonfungible_id = tnt.nonfungible_id 
     left join tbl_fungible tf
     on tf.fungible_id = tsl.fungible_id
-    left join tbl_static_delisting td 
-    on tsl.listing_id = td.delisting_id
     left join tbl_exclude_contract ex 
     on ex.nonfungible_id = tnt.nonfungible_id
     where tnf.nonfungible_address = _nonfungible_address
-        AND tnf.nonfungible_id = _token_id
+        AND tnt.token_id = _token_id
         AND tsl.static_order_id is not null
         AND tss.static_sale_id is not null
-        AND td.delisting_id is not null
         AND tsl.listing_id is not null
         AND ex.exclude_id is null
+        AND tsl.listing_id NOT IN (
+            SELECT listing_id FROM tbl_static_delisting
+        )
     group by tsl.static_order_id, tss.royalty_amount_usd, tss.final_sale_after_taxes_usd
     order by lifetime_sales_usd desc;
 
