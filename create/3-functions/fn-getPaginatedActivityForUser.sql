@@ -15,75 +15,135 @@ CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForUser
 ) 
 returns TABLE 
 (
-	static_order_id int8,
-	listing_fungible_token_price numeric,
-	listing_unixtime int8,
-	listing_block numeric,
-	listing_transaction_hash varchar,
-	json_build_object json,
-	sale_transaction_hash varchar,
-	sale_block numeric,
-	sale_unixtime int8,
-	buyer_address varchar,
-	royalty_recipient_address varchar,
-	tax_recipient_address varchar,
-	one_token_as_usd numeric,
-	tax_amount_token numeric,
-	tax_amount_usd numeric,
-	royalty_amount_token numeric,
-	royalty_amount_usd numeric,
-	final_sale_after_taxes_tokens numeric,
-	final_sale_after_taxes_usd numeric,
-	delisting_transaction_hash varchar,
-	delisting_block numeric,
-	delisting_unixtime int8
+	activity varchar,
+	unixtime int8,
+	token_id numeric(78,0),
+	contract varchar,
+	price_symbol varchar,
+	price numeric(40,0),
+	royalty_amount numeric(40,0)
 ) 
 AS 
 $BODY$
 BEGIN
+	RETURN QUERY
+	SELECT
+		'List'::varchar as activity,
+		listing_unixtime as unixtime,
+		tnft.token_id as token_id,
+		nonfungible_address as contract,
+		tf.fungible_symbol as price_symbol,
+		listing_fungible_token_price as price,
+		0 as royalty_amount
 
-    RETURN QUERY
-	select 
-		tsl.static_order_id,
-		tsl.listing_fungible_token_price,
-		tsl.listing_unixtime,
-		tsl.listing_block,
-		tsl.listing_transaction_hash,
-		json_build_object(tf.fungible_address , tf.fungible_name, tf.fungible_symbol, tf.decimals),
-		tss.sale_transaction_hash,
-		tss.sale_block,
-		tss.sale_unixtime,
-		tss.buyer_address,
-		tss.royalty_recipient_address,
-		tss.tax_recipient_address,
-		tss.one_token_as_usd,
-		tss.tax_amount_token,
-		tss.tax_amount_usd,
-		tss.royalty_amount_token,
-		tss.royalty_amount_usd,
-		tss.final_sale_after_taxes_tokens,
-		tss.final_sale_after_taxes_usd,
-		tsd.delisting_transaction_hash,
-		tsd.delisting_block,
-		tsd.delisting_unixtime
-	from tbl_nonfungible_token tnft
-	left join tbl_static_listing tsl 
-	on tnft.extract_nft_id = tsl.extract_nft_id 
-	left join tbl_static_delisting td 
-	on tsl.listing_id  = td.listing_id 
-	left join tbl_fungible tf 
-	on tsl.fungible_id = tf.fungible_id
-	left join tbl_static_sale tss  
-	on tsl.listing_id = tss.listing_id
-	left join tbl_static_delisting tsd  
-	on tsl.listing_id = tsd.listing_id
-	where 
-	tsl.listing_user_address = _listing_user_address and 
-	tsl.listing_id is not null
-	order by tsl.listing_unixtime desc
+	FROM tbl_static_listing tsl
+
+	LEFT JOIN tbl_nonfungible_token tnft
+		ON tsl.extract_nft_id = tnft.extract_nft_id
+
+	LEFT JOIN tbl_nonfungible tnf
+		ON tnft.nonfungible_id = tnf.nonfungible_id
+
+	LEFT JOIN tbl_fungible tf
+		ON tsl.fungible_id = tf.fungible_id
+
+	WHERE tsl.listing_user_address = _listing_user_address
+
+	UNION ALL
+
+	SELECT
+		'De-list'::varchar AS activity,
+		delisting_unixtime as unixtime,
+		tnft.token_id as token_id,
+		nonfungible_address as contract,
+		tf.fungible_symbol as price_symbol,
+		listing_fungible_token_price as price,
+		0 as royalty_amount
+
+	FROM tbl_static_delisting tsd
+
+	LEFT JOIN tbl_static_listing tsl
+		ON tsd.listing_id = tsl.listing_id
+
+	LEFT JOIN tbl_nonfungible_token tnft
+		ON tsl.extract_nft_id = tnft.extract_nft_id
+	
+	LEFT JOIN tbl_nonfungible tnf
+		ON tnft.nonfungible_id = tnf.nonfungible_id
+
+	LEFT JOIN tbl_fungible tf
+		ON tsl.fungible_id = tf.fungible_id
+
+	WHERE tsl.listing_user_address = _listing_user_address
+
+	UNION ALL
+
+	SELECT
+		CAST(
+			CASE
+				WHEN buyer_address != _listing_user_address OR (buyer_address = _listing_user_address AND listing_user_address = _listing_user_address) THEN 'Sell' 
+			END
+			AS varchar
+		) AS activity,
+		sale_unixtime as unixtime,
+		tnft.token_id as token_id,
+		nonfungible_address as contract,
+		tf.fungible_symbol as price_symbol,
+		listing_fungible_token_price as price,
+		royalty_amount_token as royalty_amount
+
+	FROM tbl_static_sale tss
+
+	LEFT JOIN tbl_static_listing tsl
+		ON tss.listing_id = tsl.listing_id
+
+	LEFT JOIN tbl_nonfungible_token tnft
+		ON tsl.extract_nft_id = tnft.extract_nft_id
+
+	LEFT JOIN tbl_nonfungible tnf
+		ON tnft.nonfungible_id = tnf.nonfungible_id
+
+	LEFT JOIN tbl_fungible tf
+		ON tsl.fungible_id = tf.fungible_id
+
+	WHERE tsl.listing_user_address = _listing_user_address
+
+	UNION ALL
+
+	SELECT
+		CAST(
+			CASE
+				WHEN buyer_address = _listing_user_address THEN 'Buy'
+				WHEN buyer_address = _listing_user_address AND listing_user_address = _listing_user_address THEN 'Buy' 
+			END 
+			AS varchar
+		) AS activity,
+		sale_unixtime as unixtime,
+		tnft.token_id as token_id,
+		nonfungible_address as contract,
+		tf.fungible_symbol as price_symbol,
+		listing_fungible_token_price as price,
+		royalty_amount_token as royalty_amount
+
+	FROM tbl_static_sale tss
+
+	LEFT JOIN tbl_static_listing tsl
+		ON tss.listing_id = tsl.listing_id
+
+	LEFT JOIN tbl_nonfungible_token tnft
+		ON tsl.extract_nft_id = tnft.extract_nft_id
+
+	LEFT JOIN tbl_nonfungible tnf
+		ON tnft.nonfungible_id = tnf.nonfungible_id
+
+	LEFT JOIN tbl_fungible tf
+		ON tsl.fungible_id = tf.fungible_id
+
+	WHERE tsl.listing_user_address = _listing_user_address
+
+	ORDER BY unixtime DESC
 	LIMIT _limit_rows
    	OFFSET _offset_rows;
-
 
 END;
 $BODY$
