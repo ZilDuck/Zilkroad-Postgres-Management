@@ -5,7 +5,9 @@
 -------------------------------------------------------------------------------
 -- Modification History
 --
--- 08-01-2022  Nines Inital creation.
+-- 08-01-2022 - Nines - Inital creation.
+-- 04-06-2022 - Badman - Refactor return data and query
+-- 06-06-2022 - Nines - Add AdminReturn/UpgradeMarketplace history row
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForUser
 (
@@ -75,6 +77,34 @@ BEGIN
 		ON tsl.fungible_id = tf.fungible_id
 
 	WHERE tsl.listing_user_address = _listing_user_address
+
+	UNION ALL
+
+	SELECT
+		'Admin-Delist'::varchar AS activity,
+		delisting_unixtime as unixtime,
+		tnft.token_id as token_id,
+		nonfungible_address as contract,
+		tf.fungible_symbol as price_symbol,
+		listing_fungible_token_price as price,
+		0 as royalty_amount
+
+	FROM tbl_static_delisting tsd
+
+	LEFT JOIN tbl_static_listing tsl
+		ON tsd.listing_id = tsl.listing_id
+
+	LEFT JOIN tbl_nonfungible_token tnft
+		ON tsl.extract_nft_id = tnft.extract_nft_id
+	
+	LEFT JOIN tbl_nonfungible tnf
+		ON tnft.nonfungible_id = tnf.nonfungible_id
+
+	LEFT JOIN tbl_fungible tf
+		ON tsl.fungible_id = tf.fungible_id
+
+	WHERE tsl.listing_user_address = '0xD166db1a29Fec78c17DBF2CedA31df3a819B1553'
+
 
 	UNION ALL
 
