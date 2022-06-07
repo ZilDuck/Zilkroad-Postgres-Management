@@ -16,8 +16,8 @@ CREATE OR REPLACE FUNCTION fn_getPeriodGraphForNonFungibleToken
 ) 
 returns TABLE 
 (
-    sale_unixtime int8,
-    total_sale_usd numeric(15,2)
+    unixtime int8,
+    price numeric(15,2)
 ) 
 AS 
 $BODY$
@@ -25,8 +25,8 @@ BEGIN
 
 RETURN QUERY    
     select 
-        tss.sale_unixtime,
-        SUM(tss.tax_amount_usd + tss.final_sale_after_taxes_usd) as total_sale_usd
+        tss.sale_unixtime as unixtime,
+        SUM(tss.tax_amount_usd + tss.final_sale_after_taxes_usd) as price
     FROM tbl_static_listing tsl 
     left join tbl_static_sale tss
     on tss.listing_id = tsl.listing_id
@@ -45,7 +45,7 @@ RETURN QUERY
     tss.sale_unixtime,      
     tss.tax_amount_usd,
     tss.final_sale_after_taxes_usd
-    order by tsl.static_order_id;
+    order by sale_unixtime asc;
 
 END;
 $BODY$
