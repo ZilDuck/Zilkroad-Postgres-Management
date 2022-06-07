@@ -47,7 +47,6 @@ RETURN QUERY
         AND tsl.listing_id NOT IN (
             SELECT listing_id FROM tbl_static_delisting
         )
-    group by tsl.static_order_id, tss.royalty_amount_usd, tss.final_sale_after_taxes_usd
     order by lifetime_sales_usd desc;
 
 END;
