@@ -16,11 +16,12 @@ CREATE OR REPLACE FUNCTION fn_getCollectionsActivity
 ) 
 RETURNS TABLE
 (
+    nonfungible_address varchar(255),
     nonfungible_name varchar(255),
     nonfungible_symbol varchar(255),
     royalties_paid numeric(15,2),
     trading_vol_usd numeric(15,2),
-    trade_quantity integer
+    trade_quantity bigint
 )
 AS 
 $BODY$
@@ -28,6 +29,7 @@ BEGIN
 
     RETURN QUERY
     SELECT 
+        tnf.nonfungible_address,
         tnf.nonfungible_name,
         tnf.nonfungible_symbol,
         SUM(tss.royalty_amount_usd) as "royalties_paid",
@@ -49,6 +51,7 @@ BEGIN
         AND tsl.listing_id is not null
         AND ex.exclude_id is null
     group by 
+        tnf.nonfungible_address,
         tnf.nonfungible_name,
         tnf.nonfungible_symbol
     order by trading_vol_usd desc

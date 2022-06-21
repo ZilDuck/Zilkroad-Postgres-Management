@@ -23,11 +23,15 @@ $ ./venv/Scripts/activate
 $ (venv) python3 setup.py install
 # If that fails
 $ (venv) pip install -r requirements.txt
+# If that fails (or you are running on a mac)
+$ brew install postgresql
 ```
 
 ## Create
 
-Use of this is intended for **new** instances of Postgres. Running the application is as follows;
+Use of this is intended for **new** instances of Postgres. You should have docker up with an instance of Postgres/Adminer running.
+
+Running the application is as follows;
 ```
 $ ./application.py --postgres-dsn postgresql://postgres:postgres@localhost:5432/postgres --function create
 ```

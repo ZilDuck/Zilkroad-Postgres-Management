@@ -9,7 +9,7 @@
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getSingleCollectionsActivity
 (
-    _contract_address varchar(42)
+    _contract_address varchar(42),
     _time_from int8,
 	_time_to int8
 ) 
@@ -19,7 +19,7 @@ RETURNS TABLE
     nonfungible_symbol varchar(255),
     royalties_paid numeric(15,2),
     trading_vol_usd numeric(15,2),
-    trade_quantity integer
+    trade_quantity bigint
 )
 AS 
 $BODY$
@@ -51,7 +51,7 @@ BEGIN
     group by 
         tnf.nonfungible_name,
         tnf.nonfungible_symbol
-    order by trading_vol_usd desc
+    order by trading_vol_usd desc;
 
 END;
 $BODY$
