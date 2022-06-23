@@ -28,35 +28,30 @@ $BODY$
 BEGIN
 
     RETURN QUERY
-    SELECT 
-        tnf.nonfungible_address,
-        tnf.nonfungible_name,
-        tnf.nonfungible_symbol,
-        SUM(tss.royalty_amount_usd) as "royalties_paid",
-        SUM(tss.final_sale_after_taxes_usd) as "trading_vol_usd",
-        COUNT(tss.static_sale_id) as "trade_quantity"
-    FROM tbl_static_listing tsl 
-    left join tbl_static_sale tss
-    on tss.listing_id = tsl.listing_id
-    left join tbl_nonfungible_token tnt
-    on tnt.extract_nft_id = tsl.extract_nft_id
-    left join tbl_nonfungible tnf
-    on tnf.nonfungible_id = tnt.nonfungible_id 
-    left join tbl_exclude_contract ex 
-    on ex.nonfungible_id = tnt.nonfungible_id
-    where 
-        tss.sale_unixtime between _time_from and _time_to
-        AND tsl.static_order_id is not null
-        AND tss.static_sale_id is not null
-        AND tsl.listing_id is not null
-        AND ex.exclude_id is null
-    group by 
-        tnf.nonfungible_address,
-        tnf.nonfungible_name,
-        tnf.nonfungible_symbol
-    order by trading_vol_usd desc
-    LIMIT _limit_rows
-   	OFFSET _offset_rows;
+        SELECT 
+            tnf.nonfungible_address,
+            tnf.nonfungible_name,
+            tnf.nonfungible_symbol,
+            SUM(tss.royalty_amount_usd) as "royalties_paid",
+            SUM(tss.final_sale_after_taxes_usd) as "trading_vol_usd",
+            COUNT(tss.static_sale_id) as "trade_quantity"
+        FROM tbl_static_listing tsl 
+        inner join tbl_static_sale tss
+        on tss.listing_id = tsl.listing_id
+        inner join tbl_nonfungible_token tnt
+        on tnt.extract_nft_id = tsl.extract_nft_id
+        inner join tbl_nonfungible tnf
+        on tnf.nonfungible_id = tnt.nonfungible_id 
+        left join tbl_exclude_contract ex 
+        on ex.nonfungible_id = tnt.nonfungible_id
+        where
+            tss.sale_unixtime between _time_from and _time_to 
+            AND ex.exclude_id is null
+        group by 
+            tnf.nonfungible_address,
+            tnf.nonfungible_name,
+            tnf.nonfungible_symbol
+        order by trading_vol_usd desc;
 
 END;
 $BODY$
