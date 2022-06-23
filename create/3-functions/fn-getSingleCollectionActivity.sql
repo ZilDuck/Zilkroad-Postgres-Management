@@ -27,6 +27,7 @@ BEGIN
 
     RETURN QUERY
     SELECT 
+        tnf.nonfungible_address,
         tnf.nonfungible_name,
         tnf.nonfungible_symbol,
         SUM(tss.royalty_amount_usd) as "royalties_paid",
