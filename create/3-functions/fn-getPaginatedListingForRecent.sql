@@ -58,7 +58,7 @@ BEGIN
     on ex.nonfungible_id = tnt.nonfungible_id
     AND tsl.static_order_id is not null
     AND tss.static_sale_id is null
-    AND td.delisting_id is not null
+    AND td.delisting_id is null
     AND tsl.listing_id is not null
     AND ex.exclude_id is null
     order by tsl.static_order_id

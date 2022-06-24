@@ -49,7 +49,7 @@ BEGIN
     on tss.listing_id = tsl.listing_id
     WHERE
         tnf.nonfungible_address = _nonfungible_address
-        AND td.delisting_id is not  null
+        AND td.delisting_id is  null
         AND tsl.listing_id is not null
         AND ex.exclude_id is null;     
 
