@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION fn_getSingleCollectionsActivity
 ) 
 RETURNS TABLE
 (
+    nonfungible_address varchar(255),
     nonfungible_name varchar(255),
     nonfungible_symbol varchar(255),
     royalties_paid numeric(15,2),
@@ -47,6 +48,7 @@ BEGIN
         AND tnf.nonfungible_address = _contract_address
         AND ex.exclude_id is null
     group by 
+        tnf.nonfungible_address,
         tnf.nonfungible_name,
         tnf.nonfungible_symbol
     order by trading_vol_usd desc;
