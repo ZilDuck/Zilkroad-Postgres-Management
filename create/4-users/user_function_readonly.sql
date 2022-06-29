@@ -8,7 +8,7 @@ DROP USER IF EXISTS user_function_readonly;
 -- https://stackoverflow.com/questions/760210/how-do-you-create-a-read-only-user-in-postgresql
 -- user_function_readonly is used by the public API
 -- It is allowed connection to public DB and all function calls
-CREATE ROLE user_function_readonly WITH LOGIN PASSWORD 'a}T.K;XA>M45d\D/#Ws#T$As+4a=MM8S'
+CREATE ROLE user_function_readonly WITH LOGIN PASSWORD 'a}TKXA>M45dD#Ws#TAs+4a=MM8S'
 NOSUPERUSER INHERIT NOCREATEDB NOCREATEROLE NOREPLICATION VALID UNTIL 'infinity';
 
 --assign permissions
