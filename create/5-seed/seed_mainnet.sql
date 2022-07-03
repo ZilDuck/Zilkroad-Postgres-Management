@@ -26,8 +26,13 @@ VALUES
 	('0x8ab2af0cccee7195a7c16030fbdfde6501d91903','NFD','Non Fungible Ducks'),
 	('0x38c30391667d178e982af3a14e8bd2aa00efc771','BIOME','Bizarre Biomes'),
 	('0x8a79bac7a6383211ae902f34e86c6b729906346d','TSC','The Soulless Citadel'),
-	('0xd2b54e791930dd7d06ea51f3c2a6cf2c00f165ea','BEANEL','Beanterra')
-
+	('0xd2b54e791930dd7d06ea51f3c2a6cf2c00f165ea','BEANEL','Beanterra'),
+	('0x92ae7E92E0804501c67cF43Fdb333c9B79bc0Fc5','DEM','DeMons'),
+	('0xb3b9d125da9b2a5414da60bc001844113498b738','ORDER','The Order of the Redeemed Exodus Token'),
+	('0xc27bd09322a86e5abdafbcd60248e1f4d601f881','ORDER','The Order of the Redeemed Genesis Token'),
+	('0xf79a456a5afd412d3890e2232f6205f664be8957','ZOA','Metazoa'),
+	('0xd793f378a925b9f0d3c4b6ee544d31c707899386','BEAR','The Bear Market')
+	('0xe6af3c79f12c39c661627c8f9457c14ea2b9fd52','FJNFT','FootballJunkz')
 	
 )
 ON CONFLICT DO NOTHING;
@@ -44,6 +49,12 @@ values
 	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0x38c30391667d178e982af3a14e8bd2aa00efc771'),
 	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0x8a79bac7a6383211ae902f34e86c6b729906346d'),
 	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0xd2b54e791930dd7d06ea51f3c2a6cf2c00f165ea'),
+	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0x92ae7E92E0804501c67cF43Fdb333c9B79bc0Fc5'),
+	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0xb3b9d125da9b2a5414da60bc001844113498b738'),
+	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0xc27bd09322a86e5abdafbcd60248e1f4d601f881'),
+	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0xf79a456a5afd412d3890e2232f6205f664be8957'),
+	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0xd793f378a925b9f0d3c4b6ee544d31c707899386'),
+	(SELECT nonfungible_id from tbl_nonfungible where nonfungible_address = '0xe6af3c79f12c39c661627c8f9457c14ea2b9fd52'),
 )
 ON CONFLICT DO NOTHING;
 
