@@ -24,7 +24,7 @@ returns TABLE
     GZIL_volume numeric,
     XSGD_volume numeric,
     zWBTC_volume numeric,
-    zWETH_volume numeric,
+    zETH_volume numeric,
     zUSDT_volume numeric,
     DUCK_volume numeric
 ) 
@@ -41,7 +41,7 @@ RETURN QUERY
         SUM(case when tf.fungible_symbol = 'GZIL' then tsl.listing_fungible_token_price else 0 end) as GZIL_volume,
         SUM(case when tf.fungible_symbol = 'XSGD' then tsl.listing_fungible_token_price else 0 end) as XSGD_volume,
         SUM(case when tf.fungible_symbol = 'zWBTC' then tsl.listing_fungible_token_price else 0 end) as zWBTC_volume,
-        SUM(case when tf.fungible_symbol = 'zWETH' then tsl.listing_fungible_token_price else 0 end) as zWETH_volume,
+        SUM(case when tf.fungible_symbol = 'zETH' then tsl.listing_fungible_token_price else 0 end) as zETH_volume,
         SUM(case when tf.fungible_symbol = 'zUSDT' then tsl.listing_fungible_token_price else 0 end) as zUSDT_volume,
         SUM(case when tf.fungible_symbol = 'DUCK' then tsl.listing_fungible_token_price else 0 end) as DUCK_volume
     FROM tbl_static_listing tsl 
