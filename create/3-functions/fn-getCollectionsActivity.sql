@@ -34,7 +34,7 @@ BEGIN
             tnf.nonfungible_symbol,
             SUM(tss.royalty_amount_usd) as "royalties_paid",
             SUM(tss.final_sale_after_taxes_usd) as "trading_vol_usd",
-            COUNT(tss.static_sale_id) as "trade_quantity"
+            CAST(COUNT(tss.static_sale_id) as BIGINT) as "trade_quantity"
         FROM tbl_static_listing tsl 
         inner join tbl_static_sale tss
         on tss.listing_id = tsl.listing_id
