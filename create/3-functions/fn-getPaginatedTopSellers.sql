@@ -24,7 +24,7 @@ returns TABLE
     GZIL numeric,
     XSGD numeric,
     zWBTC numeric,
-    zWETH numeric,
+    zETH numeric,
     zUSDT numeric,
     DUCK numeric
 ) 
@@ -40,7 +40,7 @@ RETURN QUERY
         SUM(case when tf.fungible_symbol = 'GZIL' then tsl.listing_fungible_token_price else 0 end) as GZIL,
         SUM(case when tf.fungible_symbol = 'XSGD' then tsl.listing_fungible_token_price else 0 end) as XSGD,
         SUM(case when tf.fungible_symbol = 'zWBTC' then tsl.listing_fungible_token_price else 0 end) as zWBTC,
-        SUM(case when tf.fungible_symbol = 'zWETH' then tsl.listing_fungible_token_price else 0 end) as zWETH,
+        SUM(case when tf.fungible_symbol = 'zETH' then tsl.listing_fungible_token_price else 0 end) as zETH,
         SUM(case when tf.fungible_symbol = 'zUSDT' then tsl.listing_fungible_token_price else 0 end) as zUSDT,
         SUM(case when tf.fungible_symbol = 'DUCK' then tsl.listing_fungible_token_price else 0 end) as DUCK
 
