@@ -24,7 +24,7 @@ returns TABLE
     GZIL numeric,
     XSGD numeric,
     zWBTC numeric,
-    zWETH numeric,
+    zETH numeric,
     zUSDT numeric,
     DUCK numeric
 ) 
@@ -40,7 +40,7 @@ RETURN QUERY
         COALESCE(SUM(case when tf.fungible_symbol = 'GZIL' then tss.royalty_amount_token else 0 end), 0) as GZIL,
         COALESCE(SUM(case when tf.fungible_symbol = 'XSGD' then tss.royalty_amount_token else 0 end), 0) as XSGD,
         COALESCE(SUM(case when tf.fungible_symbol = 'zWBTC' then tss.royalty_amount_token else 0 end), 0) as zWBTC,
-        COALESCE(SUM(case when tf.fungible_symbol = 'zWETH' then tss.royalty_amount_token else 0 end), 0) as zWETH,
+        COALESCE(SUM(case when tf.fungible_symbol = 'zETH' then tss.royalty_amount_token else 0 end), 0) as zETH,
         COALESCE(SUM(case when tf.fungible_symbol = 'zUSDT' then tss.royalty_amount_token else 0 end), 0) as zUSDT,
         COALESCE(SUM(case when tf.fungible_symbol = 'DUCK' then tss.royalty_amount_token else 0 end), 0) as DUCK
 
