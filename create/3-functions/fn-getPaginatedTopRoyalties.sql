@@ -7,6 +7,7 @@
 --
 -- 27-03-2022 Nines - Inital creation.
 -- 14-04-2022 Nines - Add unix filtering.
+-- 01-07-2022 Rich  - Fix logic 
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedTopRoyalties
 (
@@ -17,16 +18,15 @@ CREATE OR REPLACE FUNCTION fn_getPaginatedTopRoyalties
 ) 
 returns TABLE 
 (
-    royalty_address varchar,
-    lifetime_sales_usd numeric,
-    lifetime_quantity_royalty bigint,
-    WZIL_volume numeric,
-    GZIL_volume numeric,
-    XSGD_volume numeric,
-    zWBTC_volume numeric,
-    zWETH_volume numeric,
-    zUSDT_volume numeric,
-    DUCK_volume numeric
+    address varchar,
+    total_usd numeric,
+    WZIL numeric,
+    GZIL numeric,
+    XSGD numeric,
+    zWBTC numeric,
+    zETH numeric,
+    zUSDT numeric,
+    DUCK numeric
 ) 
 AS 
 $BODY$
@@ -34,41 +34,43 @@ BEGIN
 
 RETURN QUERY 
  select 
-        tss.royalty_recipient_address as royalty_address,
-        SUM(tss.royalty_amount_usd) as lifetime_royalty_usd,
-        COUNT(tss.static_sale_id) as lifetime_quantity_royalty,
-        SUM(case when tf.fungible_symbol = 'WZIL' then tss.royalty_amount_token else 0 end) as WZIL_volume,
-        SUM(case when tf.fungible_symbol = 'GZIL' then tss.royalty_amount_token else 0 end) as GZIL_volume,
-        SUM(case when tf.fungible_symbol = 'XSGD' then tss.royalty_amount_token else 0 end) as XSGD_volume,
-        SUM(case when tf.fungible_symbol = 'zWBTC' then tss.royalty_amount_token else 0 end) as zWBTC_volume,
-        SUM(case when tf.fungible_symbol = 'zWETH' then tss.royalty_amount_token else 0 end) as zWETH_volume,
-        SUM(case when tf.fungible_symbol = 'zUSDT' then tss.royalty_amount_token else 0 end) as zUSDT_volume,
-        SUM(case when tf.fungible_symbol = 'DUCK' then tss.royalty_amount_token else 0 end) as DUCK_volume
-    FROM tbl_static_listing tsl 
-    left join tbl_static_sale tss
-    on tss.listing_id = tsl.listing_id
-    left join tbl_nonfungible_token tnt
-    on tnt.extract_nft_id = tsl.extract_nft_id
-    left join tbl_nonfungible tnf
-    on tnf.nonfungible_id = tnt.nonfungible_id 
-    left join tbl_fungible tf
-    on tf.fungible_id = tsl.fungible_id
-    left join tbl_static_delisting td 
-    on tsl.listing_id = td.delisting_id
-    left join tbl_exclude_contract ex 
-    on ex.nonfungible_id = tnt.nonfungible_id
-    where tsl.static_order_id is not null
-        AND tss.static_sale_id is not null
-        AND td.delisting_id is  null
-        AND tsl.listing_id is not null
-        AND ex.exclude_id is null
-        AND tsl.listing_unixtime BETWEEN _time_from AND _time_to
-    group by tsl.static_order_id, 
-    tss.royalty_amount_usd, 
-    tss.final_sale_after_taxes_usd, 
-    tss.royalty_recipient_address,
-    tf.fungible_symbol
-    order by lifetime_royalty_usd desc
+        tss.royalty_recipient_address as address,
+        SUM(tss.royalty_amount_usd) as total_usd,
+        COALESCE(SUM(case when tf.fungible_symbol = 'WZIL' then tss.royalty_amount_token else 0 end), 0) as WZIL,
+        COALESCE(SUM(case when tf.fungible_symbol = 'GZIL' then tss.royalty_amount_token else 0 end), 0) as GZIL,
+        COALESCE(SUM(case when tf.fungible_symbol = 'XSGD' then tss.royalty_amount_token else 0 end), 0) as XSGD,
+        COALESCE(SUM(case when tf.fungible_symbol = 'zWBTC' then tss.royalty_amount_token else 0 end), 0) as zWBTC,
+        COALESCE(SUM(case when tf.fungible_symbol = 'zETH' then tss.royalty_amount_token else 0 end), 0) as zETH,
+        COALESCE(SUM(case when tf.fungible_symbol = 'zUSDT' then tss.royalty_amount_token else 0 end), 0) as zUSDT,
+        COALESCE(SUM(case when tf.fungible_symbol = 'DUCK' then tss.royalty_amount_token else 0 end), 0) as DUCK
+
+    FROM tbl_static_listing tsl
+
+    INNER JOIN tbl_static_sale tss
+        ON tsl.listing_id = tss.listing_id
+
+    LEFT JOIN tbl_nonfungible_token tnft 
+        ON tsl.extract_nft_id = tnft.extract_nft_id
+
+    LEFT JOIN tbl_nonfungible tnf
+        ON tnft.nonfungible_id = tnf.nonfungible_id
+
+    LEFT JOIN tbl_fungible tf
+        ON tsl.fungible_id = tf.fungible_id
+
+    WHERE tss.listing_id NOT IN (
+        SELECT listing_id FROM tbl_static_delisting
+    )
+    AND tnft.nonfungible_id NOT IN (
+        SELECT nonfungible_id FROM tbl_exclude_contract
+    )
+    AND tsl.listing_unixtime BETWEEN _time_from AND _time_to
+
+    GROUP BY 
+        tss.royalty_recipient_address,
+        tf.fungible_symbol
+
+    ORDER BY sum(tss.royalty_amount_usd) DESC
     LIMIT _limit_rows
    	OFFSET _offset_rows;
 
