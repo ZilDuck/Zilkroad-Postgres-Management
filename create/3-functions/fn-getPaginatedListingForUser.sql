@@ -6,13 +6,14 @@
 -- Modification History
 --
 -- 17-01-2022  Nines Inital creation.
+-- 16-07-2022  Rich Fix exclusions
 -------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION fn_getPaginatedListingForUser
 (
     _listing_user_address varchar(42),
-	_limit_rows numeric,
-	_offset_rows numeric
+    _limit_rows numeric,
+    _offset_rows numeric
 ) 
 returns TABLE
         (
@@ -41,8 +42,6 @@ BEGIN
                tsl.listing_block,
                tsl.listing_unixtime
         from tbl_static_listing tsl
-                 left join tbl_static_delisting td
-                           on tsl.listing_id = td.listing_id
                  left join tbl_nonfungible_token tnt
                            on tsl.extract_nft_id = tnt.extract_nft_id
                  left join tbl_fungible tf
@@ -51,11 +50,11 @@ BEGIN
                            on tnf.nonfungible_id = tnt.nonfungible_id
                  left join tbl_exclude_contract ec
                            on ec.nonfungible_id = tf.fungible_id
-        where td.delisting_id is null
+        where listing_id not in (select listing_id from tbl_static_delisting union all select listing_id from tbl_static_sale)
           AND ec.exclude_id is null
           AND tsl.listing_user_address = _listing_user_address
         LIMIT _limit_rows OFFSET _offset_rows;
-	   
+       
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE SECURITY DEFINER COST 100;
