@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION fn_getPaginatedTopRoyalties
 (
 	_limit_rows numeric,
 	_offset_rows numeric,
-  _time_from int8,
+    _time_from int8,
 	_time_to int8
 ) 
 returns TABLE 
