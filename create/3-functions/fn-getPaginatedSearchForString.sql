@@ -7,6 +7,7 @@
 --
 -- 16-03-2022 Nines - Inital creation.
 -- 09-04-2022 Nines - Add excluded and verified logic, don't remove brackets in where clause.
+-- 22-07-2022 Nines - Resolve bug with freetext of 0x address and add sorting
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedSearchForString
 (
@@ -52,7 +53,6 @@ RETURN QUERY
         tnf.nonfungible_name
     LIMIT _limit_rows
     OFFSET _offset_rows;
-
 
 END;
 $BODY$
