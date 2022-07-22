@@ -47,8 +47,12 @@ RETURN QUERY
         tnf.nonfungible_symbol, 
         tnf.nonfungible_name,
         tvc.verified_id
+    ORDER BY 
+        tvc.verified_id,
+        tnf.nonfungible_name
     LIMIT _limit_rows
-   	OFFSET _offset_rows;
+    OFFSET _offset_rows;
+
 
 END;
 $BODY$
