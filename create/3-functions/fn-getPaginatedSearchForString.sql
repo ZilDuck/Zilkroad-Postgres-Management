@@ -38,10 +38,10 @@ RETURN QUERY
     on ex.nonfungible_id = tnt.nonfungible_id
     left join tbl_verified_contract tvc   
     on tvc.nonfungible_id = tnf.nonfungible_id
-    WHERE (tnf.nonfungible_name @@ plainto_tsquery('english', _user_search)
-    OR tnf.nonfungible_symbol @@ plainto_tsquery('english', _user_search)
-    OR tnf.nonfungible_address ilike '%' || _user_search || '%'
-    AND ex.exclude_id is null)
+    WHERE SIMILARITY(tnf.nonfungible_name,'test') > 0.5
+    OR SIMILARITY(nonfungible_symbol,'test') > 0.5
+    OR nonfungible_address like 'test%'
+    AND ex.exclude_id is null
     GROUP BY 
         tnf.nonfungible_address, 
         tnf.nonfungible_symbol, 
