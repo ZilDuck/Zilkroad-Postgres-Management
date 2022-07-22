@@ -39,9 +39,9 @@ RETURN QUERY
     on ex.nonfungible_id = tnt.nonfungible_id
     left join tbl_verified_contract tvc   
     on tvc.nonfungible_id = tnf.nonfungible_id
-    WHERE SIMILARITY(tnf.nonfungible_name,_user_search) > 0.5
-    OR SIMILARITY(nonfungible_symbol,_user_search) > 0.5
-    OR nonfungible_address like concat(_user_search,'%') 
+    WHERE SIMILARITY(tnf.nonfungible_name, _user_search) > 0.5
+    OR SIMILARITY(tnf.nonfungible_symbol, _user_search) > 0.5
+    OR tnf.nonfungible_address like concat(_user_search, '%') 
     AND ex.exclude_id is null
     GROUP BY 
         tnf.nonfungible_address, 
