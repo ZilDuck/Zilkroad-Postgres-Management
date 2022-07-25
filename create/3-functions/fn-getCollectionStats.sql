@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 10-06-2022 Rich - Inital creation
+-- 25-07-2022 Rich - Remove case sensitivity
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getCollectionStats
 (
@@ -35,7 +36,7 @@ BEGIN
             INNER JOIN tbl_nonfungible tnf
                 ON tnft.nonfungible_id = tnf.nonfungible_id
 
-            WHERE nonfungible_address = _nonfungible_address
+            WHERE LOWER(nonfungible_address) = LOWER(_nonfungible_address)
             AND tsl.listing_id NOT IN (
                 SELECT listing_id
                 FROM tbl_static_delisting
@@ -58,7 +59,7 @@ BEGIN
             INNER JOIN tbl_nonfungible tnf
                 ON tnft.nonfungible_id = tnf.nonfungible_id
 
-            WHERE nonfungible_address = _nonfungible_address
+            WHERE LOWER(nonfungible_address) = LOWER(_nonfungible_address)
             AND tss.listing_id NOT IN (
                 SELECT listing_id
                 FROM tbl_static_delisting
