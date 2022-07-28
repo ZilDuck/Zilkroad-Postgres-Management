@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 19-04-2022 Nines - Inital creation
+-- 28-07-2022 Rich  - Fixed collections not showing
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getCollectionsActivity
 (
@@ -32,11 +33,11 @@ BEGIN
             tnf.nonfungible_address,
             tnf.nonfungible_name,
             tnf.nonfungible_symbol,
-            SUM(tss.royalty_amount_usd) as "royalties_paid",
-            SUM(tss.final_sale_after_taxes_usd) as "trading_vol_usd",
-            CAST(COUNT(tss.static_sale_id) as BIGINT) as "trade_quantity"
+            COALESCE(SUM(tss.royalty_amount_usd), 0) as "royalties_paid",
+            COALESCE(SUM(tss.final_sale_after_taxes_usd), 0) as "trading_vol_usd",
+            COALESCE(CAST(COUNT(tss.static_sale_id) as BIGINT), 0) as "trade_quantity"
         FROM tbl_static_listing tsl 
-        inner join tbl_static_sale tss
+        left join tbl_static_sale tss
         on tss.listing_id = tsl.listing_id
         inner join tbl_nonfungible_token tnt
         on tnt.extract_nft_id = tsl.extract_nft_id
