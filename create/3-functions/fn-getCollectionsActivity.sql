@@ -45,9 +45,7 @@ BEGIN
         on tnf.nonfungible_id = tnt.nonfungible_id 
         left join tbl_exclude_contract ex 
         on ex.nonfungible_id = tnt.nonfungible_id
-        where
-            tss.sale_unixtime between _time_from and _time_to 
-            AND ex.exclude_id is null
+        where ex.exclude_id is null
         group by 
             tnf.nonfungible_address,
             tnf.nonfungible_name,
