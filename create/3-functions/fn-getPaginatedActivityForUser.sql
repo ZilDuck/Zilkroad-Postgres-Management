@@ -8,6 +8,7 @@
 -- 08-01-2022 - Nines - Inital creation.
 -- 04-06-2022 - Badman - Refactor return data and query
 -- 06-06-2022 - Nines - Add AdminReturn/UpgradeMarketplace history row
+-- 08-08-2022 - Badman - Fix logic for wallet search
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForUser
 (
@@ -49,7 +50,7 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE tsl.listing_user_address = _listing_user_address
+	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address)
 
 	UNION ALL
 
@@ -76,7 +77,7 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE tsl.listing_user_address = _listing_user_address
+	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address)
 
 	UNION ALL
 
@@ -103,7 +104,7 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE tsl.listing_user_address = '0xD166db1a29Fec78c17DBF2CedA31df3a819B1553'
+	WHERE LOWER(tsl.listing_user_address) = LOWER('0xD166db1a29Fec78c17DBF2CedA31df3a819B1553')
 
 
 	UNION ALL
@@ -111,7 +112,11 @@ BEGIN
 	SELECT
 		CAST(
 			CASE
-				WHEN buyer_address != _listing_user_address OR (buyer_address = _listing_user_address AND listing_user_address = _listing_user_address) THEN 'Sell' 
+				WHEN LOWER(buyer_address) != LOWER(_listing_user_address) 
+				OR (
+					LOWER(buyer_address) = LOWER(_listing_user_address)
+					AND LOWER(listing_user_address) = LOWER(_listing_user_address)
+				) THEN 'Sell' 
 			END
 			AS varchar
 		) AS activity,
@@ -136,15 +141,15 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE tsl.listing_user_address = _listing_user_address
+	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address)
 
 	UNION ALL
 
 	SELECT
 		CAST(
 			CASE
-				WHEN buyer_address = _listing_user_address THEN 'Buy'
-				WHEN buyer_address = _listing_user_address AND listing_user_address = _listing_user_address THEN 'Buy' 
+				WHEN LOWER(buyer_address) = LOWER(_listing_user_address) THEN 'Buy'
+				WHEN LOWER(buyer_address) = LOWER(_listing_user_address) AND LOWER(listing_user_address) = LOWER(_listing_user_address) THEN 'Buy' 
 			END 
 			AS varchar
 		) AS activity,
@@ -169,7 +174,7 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE tsl.listing_user_address = _listing_user_address
+	WHERE LOWER(tss.buyer_address) = LOWER(_listing_user_address)
 
 	ORDER BY unixtime DESC
 	LIMIT _limit_rows
