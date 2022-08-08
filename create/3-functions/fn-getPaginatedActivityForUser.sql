@@ -104,7 +104,7 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE LOWER(tsl.listing_user_address) = LOWER('0xD166db1a29Fec78c17DBF2CedA31df3a819B1553')
+	WHERE LOWER(tsl.listing_user_address) = LOWER('0x8e7358f356fda73d450aed70dab7a93708b75650')
 
 
 	UNION ALL
