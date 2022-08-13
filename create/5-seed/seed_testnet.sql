@@ -6,6 +6,7 @@ insert into tbl_fungible
 	decimals
 )
 values 
+('0x0000000000000000000000000000000000000000','NULL','NULL','NULL',0),
 ('0x864895d52504c388a345ef6cd9c800dbbd0ef92a','Testnet Wrapped Zilliqa','WZIL',12),
 ('0x607d0ba69c3680ed07262e5d80be98c401fd612c','Testnet Governance Zilliqa','GZIL',15),
 ('0x56906c825a6df74032ea40b4ff882b5970f3d0a8','Testnet StraitsX Singapore Dollar','XSGD',6),
