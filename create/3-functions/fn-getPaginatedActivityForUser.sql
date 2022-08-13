@@ -20,12 +20,17 @@ CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForUser
 returns TABLE 
 (
 	activity varchar,
+	tx_hash varchar(66),
 	unixtime int8,
 	token_id numeric(78,0),
 	contract varchar,
 	price_symbol varchar,
 	price numeric(40,0),
-	royalty_amount numeric(40,0)
+	royalty_amount numeric(40,0),
+	previous_price numeric(40,0),
+	previous_symbol varchar,
+	new_price numeric(40,0),
+	new_symbol varchar,
 ) 
 AS 
 $BODY$
