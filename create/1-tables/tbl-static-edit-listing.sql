@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- Created      08-01-2022
--- Purpose      Stores the edit pairs of token changes (from a token with b amount, to y token with z amount)
+-- Purpose      Stores edit listing events
 -- Copyright © 2022, Zilkroad, All Rights Reserved
 -------------------------------------------------------------------------------
 -- Modification History

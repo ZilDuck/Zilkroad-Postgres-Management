@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- Created      27-03-2022
--- Purpose      Gets the promoted cards on the front page
+-- Purpose      Index
 -- Copyright © 2022, Zilkroad, All Rights Reserved
 -------------------------------------------------------------------------------
 -- Modification History

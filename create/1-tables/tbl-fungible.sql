@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- Created      08-01-2022
--- Purpose      Gets the listing/delisting/sold activity for a particular wallet
+-- Purpose      Stores all fungible tokens accepted
 -- Copyright © 2022, Zilkroad, All Rights Reserved
 -------------------------------------------------------------------------------
 -- Modification History
