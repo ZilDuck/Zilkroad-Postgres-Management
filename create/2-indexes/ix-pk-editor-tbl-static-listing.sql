@@ -1,17 +1,16 @@
 -------------------------------------------------------------------------------
--- Created      08-01-2022
+-- Created      13-08-2022
 -- Purpose      Index
 -- Copyright © 2022, Zilkroad, All Rights Reserved
 -------------------------------------------------------------------------------
 -- Modification History
 --
--- 17-01-2022  Nines Inital creation.
+-- 13-08-2022 - Nines - Inital creation.
 -------------------------------------------------------------------------------
 
-CREATE INDEX ix_pk_composite_tbl_nonfungible_token ON
-tbl_nonfungible_token
+CREATE INDEX ix_pk_fk_editer_tbl_static_listing ON
+tbl_static_edit_listing
 (
-    extract_nft_id,
-    nonfungible_id,
-    token_id
+    listing_id,
+    edit_listing_id
 );

@@ -1,6 +1,6 @@
 -------------------------------------------------------------------------------
 -- Created      27-02-2022
--- Purpose      Gets the listing/delisting/sold activity for a particular wallet
+-- Purpose      Stores deployment data
 -- Copyright © 2022, Zilkroad, All Rights Reserved
 -------------------------------------------------------------------------------
 -- Modification History

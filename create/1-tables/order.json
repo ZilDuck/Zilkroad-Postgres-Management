@@ -13,5 +13,6 @@
   "12": "tbl-advertise-card.sql",
   "13": "tbl-calendar-event.sql",
   "14": "tbl-domain-lookup.sql",
-  "15": "tbl-deployments.sql"
+  "15": "tbl-deployments.sql",
+  "16": "tbl-static_edit_listing.sql"
 }
