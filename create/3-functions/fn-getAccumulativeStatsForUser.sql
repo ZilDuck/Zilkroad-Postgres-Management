@@ -5,7 +5,8 @@
 -------------------------------------------------------------------------------
 -- Modification History
 --
--- 17-01-2022  Nines Inital creation.
+-- 17-01-2022 - Nines - Inital creation.
+-- 18-08-2022 - Nines - Add lowercase casting for addresses
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getAccumulativeStatsForUser
 (
@@ -46,42 +47,50 @@ INSERT INTO tmp_accum_data
 values 
 (
 	( --listing
-		select count(listing_id) from tbl_static_listing where listing_user_address = _user_address
+		SELECT COUNT(tsl.listing_id) 
+		FROM tbl_static_listing tsl
+		LEFT JOIN tbl_static_sale tss
+		on tsl.listing_id = tss.listing_id
+		LEFT JOIN tbl_static_delisting tsd
+		on tsd.listing_id = tsl.listing_id
+		WHERE LOWER(tsl.listing_user_address) = LOWER(_user_address)
+		AND tss.static_sale_id IS NULL
+		AND tsd.delisting_id IS NULL
 	),
 	( --delisting
-		select count(tsd.delisting_id)
-		from tbl_static_listing tsl 
-		left join tbl_static_delisting tsd  
-		on tsl.listing_id = tsd.listing_id 
-		where tsl.listing_user_address = _user_address
+		SELECT count(tsd.delisting_id)
+		FROM tbl_static_listing tsl 
+		LEFT JOIN tbl_static_delisting tsd  
+		ON tsl.listing_id = tsd.listing_id 
+		WHERE LOWER(tsl.listing_user_address) = LOWER(_user_address)
 	),
 	( --sold
-		select count(tss.static_sale_id) 
-		from tbl_static_listing tsl 
-		left join tbl_static_sale tss  
-		on tsl.listing_id = tss.listing_id
-		where tsl.listing_user_address = _user_address
+		SELECT count(tss.static_sale_id) 
+		FROM tbl_static_listing tsl 
+		LEFT JOIN tbl_static_sale tss  
+		ON tsl.listing_id = tss.listing_id
+		WHERE LOWER(tsl.listing_user_address) = LOWER(_user_address)
 	),
 	(--bought
-		select count(tss.static_sale_id)
-		from tbl_static_listing tsl 
-		left join tbl_static_sale tss  
-		on tsl.listing_id = tss.listing_id
-		where tss.buyer_address = _user_address
+		SELECT count(tss.static_sale_id)
+		FROM tbl_static_listing tsl 
+		LEFT JOIN tbl_static_sale tss  
+		ON tsl.listing_id = tss.listing_id
+		WHERE LOWER(tss.buyer_address) = LOWER(_user_address)
 	),
 	(--royaltyrecip
-		select count(tss.static_sale_id) 
-		from tbl_static_listing tsl 
-		left join tbl_static_sale tss  
-		on tsl.listing_id = tss.listing_id
-		where tss.royalty_recipient_address = _user_address
+		SELECT count(tss.static_sale_id) 
+		FROM tbl_static_listing tsl 
+		LEFT JOIN tbl_static_sale tss  
+		ON tsl.listing_id = tss.listing_id
+		WHERE LOWER(tss.royalty_recipient_address) = LOWER(_user_address)
 	),
 	(--royaltyrecip total
-		select SUM(tss.royalty_amount_usd)
-		from tbl_static_listing tsl 
-		left join tbl_static_sale tss  
-		on tsl.listing_id = tss.listing_id
-		where tss.royalty_recipient_address = _user_address
+		SELECT SUM(tss.royalty_amount_usd)
+		FROM tbl_static_listing tsl 
+		LEFT JOIN tbl_static_sale tss  
+		ON tsl.listing_id = tss.listing_id
+		WHERE LOWER(tss.royalty_recipient_address) = LOWER(_user_address)
 	)
 );
 
