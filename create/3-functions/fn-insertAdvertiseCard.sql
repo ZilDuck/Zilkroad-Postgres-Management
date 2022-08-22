@@ -7,39 +7,47 @@
 --
 -- 19-01-2022 - Nines - Inital creation.
 -- 15-05-2022 - Nines - Fix function to actually insert data
+-- 22-08-2022 - Nines - Refine model
+--
 -------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION fn_insertAdvertiseCard
 (
     _advertise_start_unixtime int8,
 	_advertise_end_unixtime int8,
-	_advertise_description text,
+    _advertise_header varchar(30),
+	_advertise_description varchar(200),
     _advertise_uri text,
-	_half_image text,
-	_quarter_image text
+    _nonfungible_address varchar(42),
+	_desktop_image_uri text,
+	_mobile_image_uri text
 ) 
 RETURNS VOID
 AS 
 $BODY$
 BEGIN
 
-   insert into tbl_advertise_card
+    INSERT INTO tbl_advertise_card
     (   
         advertise_start_unixtime,
-        advertise_end_unixtime,
-        advertise_description,
+	    advertise_end_unixtime,
+        advertise_header,
+	    advertise_description,
         advertise_uri,
-        half_image,
-        quarter_image
+        nonfungible_address,
+	    desktop_image_uri,
+	    mobile_image_uri
     )
-    values 
+    VALUES 
     (
         _advertise_start_unixtime,
-        _advertise_end_unixtime,
-        _advertise_description,
+	    _advertise_end_unixtime,
+        _advertise_header,
+	    _advertise_description,
         _advertise_uri,
-        _half_image,
-        _quarter_image
+        _nonfungible_address,
+	    _desktop_image_uri,
+	    _mobile_image_uri
     );
 
 END;

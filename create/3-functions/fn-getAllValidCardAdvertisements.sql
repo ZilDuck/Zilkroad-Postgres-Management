@@ -5,7 +5,9 @@
 -------------------------------------------------------------------------------
 -- Modification History
 --
--- 27-03-2022  Nines Inital creation.
+-- 27-03-2022 - Nines Inital creation.
+-- 22-08-2022 - Nines - Refine model
+--
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getAllValidCardAdvertisements
 (
@@ -13,28 +15,32 @@ CREATE OR REPLACE FUNCTION fn_getAllValidCardAdvertisements
 ) 
 returns TABLE 
 (
-	advertise_start_unixtime int8,
-	advertise_end_unixtime int8,
-	advertise_description text,
+    advertise_start_unixtime int8,
+    advertise_end_unixtime int8,
+    advertise_header varchar(30),
+    advertise_description varchar(200),
     advertise_uri text,
-	half_image text,   
-	quarter_image text 
+    nonfungible_address varchar(42),
+    desktop_image_uri text,
+    mobile_image_uri text
 ) 
 AS 
 $BODY$
 BEGIN
 
     RETURN QUERY
-    select 
+    SELECT 
         tac.advertise_start_unixtime,
-        tac.advertise_end_unixtime,
-        tac.advertise_description,
+	    tac.advertise_end_unixtime,
+        tac.advertise_header,
+	    tac.advertise_description,
         tac.advertise_uri,
-        tac.half_image,   
-        tac.quarter_image 
-    from tbl_advertise_card tac
-    where tac.advertise_start_unixtime < (select extract(epoch from now()))
-    and tac.advertise_end_unixtime > (select extract(epoch from now()));
+        tac.nonfungible_address,
+	    tac.desktop_image_uri,
+	    tac.mobile_image_uri
+    FROM tbl_advertise_card tac
+    WHERE tac.advertise_start_unixtime < (SELECT extract(epoch FROM now()))
+    AND tac.advertise_end_unixtime > (SELECT extract(epoch FROM now()));
 
 END;
 $BODY$

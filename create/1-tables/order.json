@@ -9,10 +9,9 @@
   "8": "tbl-static-delisting.sql",
   "9": "tbl-static-sale.sql",
   "10": "tbl-exclude-contract.sql",
-  "11": "tbl-advertise-contract.sql",
-  "12": "tbl-advertise-card.sql",
-  "13": "tbl-calendar-event.sql",
-  "14": "tbl-domain-lookup.sql",
-  "15": "tbl-deployments.sql",
-  "16": "tbl-static_edit_listing.sql"
+  "11": "tbl-advertise-card.sql",
+  "12": "tbl-calendar-event.sql",
+  "13": "tbl-domain-lookup.sql",
+  "14": "tbl-deployments.sql",
+  "15": "tbl-static_edit_listing.sql"
 }
