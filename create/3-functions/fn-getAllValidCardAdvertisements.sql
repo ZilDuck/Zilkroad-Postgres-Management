@@ -40,7 +40,9 @@ BEGIN
 	    tac.mobile_image_uri
     FROM tbl_advertise_card tac
     WHERE tac.advertise_start_unixtime < (SELECT extract(epoch FROM now()))
-    AND tac.advertise_end_unixtime > (SELECT extract(epoch FROM now()));
+    AND tac.advertise_end_unixtime > (SELECT extract(epoch FROM now()))
+    ORDER BY random() 
+    LIMIT 1;
 
 END;
 $BODY$
