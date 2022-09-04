@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 13-02-2022  Nines Inital creation.
+-- 04-09-2022  Rich add verification
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedSalesForAllRecentContracts
 (
@@ -24,7 +25,8 @@ returns TABLE
     fungible_name varchar,
     fungible_symbol varchar,
     decimals numeric,
-    fungible_address varchar
+    fungible_address varchar,
+    verified boolean
 ) 
 AS 
 $BODY$
@@ -42,7 +44,9 @@ select
         tf.fungible_name,
         tf.fungible_symbol,
         tf.decimals,
-        tf.fungible_address
+        tf.fungible_address,
+        CASE WHEN tvc.verified_id IS NULL THEN False ELSE True END AS verified
+
     FROM tbl_static_listing tsl 
     left join tbl_static_sale tss
     on tss.listing_id = tsl.listing_id
@@ -56,6 +60,8 @@ select
     on tsl.listing_id = td.delisting_id
     left join tbl_exclude_contract ex 
     on ex.nonfungible_id = tnt.nonfungible_id
+    left join tbl_verified_contract tvc
+	on tnf.nonfungible_id = tvc.nonfungible_id
     where tsl.static_order_id is not null
     AND tss.static_sale_id is not null
     AND td.delisting_id is null
