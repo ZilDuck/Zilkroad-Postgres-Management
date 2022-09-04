@@ -1,3 +1,13 @@
+-------------------------------------------------------------------------------
+-- Created      27-03-2022
+-- Purpose      Get a list of recently listed NFTs
+-- Copyright © 2022, Zilkroad, All Rights Reserved
+-------------------------------------------------------------------------------
+-- Modification History
+--
+-- ?? - Rich I messed up the old style
+-- 04-09-2022	Rich add verification
+-------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION public.fn_getPaginatedMostRecentListings(_limit_rows numeric, _offset_rows numeric)
 RETURNS TABLE(
 	static_order_id bigint,
@@ -10,7 +20,8 @@ RETURNS TABLE(
 	fungible_name character varying,
 	fungible_symbol character varying,
 	decimals numeric,
-	fungible_address character varying
+	fungible_address character varying,
+	verified boolean
 )
 AS
 $BODY$
@@ -27,7 +38,8 @@ RETURN QUERY
 		tf.fungible_name,
 		tf.fungible_symbol,
 		tf.decimals,
-		tf.fungible_address
+		tf.fungible_address,
+		CASE WHEN tvc.verified_id IS NULL THEN False ELSE True END AS verified
 
 	FROM tbl_static_listing tsl
 
@@ -48,7 +60,9 @@ RETURN QUERY
 
 	LEFT JOIN tbl_exclude_contract tec
 		ON tnt.nonfungible_id = tec.nonfungible_id	
-
+	
+	LEFT JOIN tbl_verified_contract tvc
+		ON tnf.nonfungible_id = tvc.nonfungible_id
 
 	WHERE tsl.listing_id NOT IN (
 		SELECT listing_id
