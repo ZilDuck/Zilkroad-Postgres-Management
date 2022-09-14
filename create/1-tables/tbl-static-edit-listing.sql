@@ -17,6 +17,6 @@ CREATE TABLE "tbl_static_edit_listing" (
 	new_fungible_id SERIAL REFERENCES tbl_fungible (fungible_id),
 	new_fungible_token_price numeric(40,0) NOT NULL,
 	edit_listing_block numeric NOT NULL,
-	edit_listing_unixtime int8 NOT NULL,
+	edit_listing_unixtime int8 NOT NULL
 );
 ALTER SEQUENCE tbl_static_listing_listing_id_seq RESTART WITH 1;
