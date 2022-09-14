@@ -1,3 +1,5 @@
+CREATE EXTENSION pg_trgm;
+
 insert into tbl_fungible 
 (
 	fungible_address,
