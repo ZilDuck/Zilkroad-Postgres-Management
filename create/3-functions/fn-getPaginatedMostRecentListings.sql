@@ -6,10 +6,16 @@
 -- Modification History
 --
 -- ?? - Rich I messed up the old style
--- 04-09-2022	Rich add verification
+-- 04-09-2022 - Rich - add verification
+-- 25-09-2022 - Nines - Fix sproc syntax 
 -------------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION public.fn_getPaginatedMostRecentListings(_limit_rows numeric, _offset_rows numeric)
-RETURNS TABLE(
+CREATE OR REPLACE FUNCTION fn_getPaginatedMostRecentListings
+(
+	_limit_rows numeric, 
+	_offset_rows numeric
+)
+RETURNS TABLE
+(
 	static_order_id bigint,
 	token_id numeric,
 	nonfungible_address character varying,
