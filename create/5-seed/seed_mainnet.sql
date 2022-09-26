@@ -133,12 +133,44 @@ values
 ),
 ( 
 	1662727866, -- 9th sept
-	1665316248, -- 9th oct
+	1672002558, -- 25th dec
 	'Envizion : Tell stories the web3 way.'
 	'Envizion provides a platform for NFTs to expand their storytelling ability, enabling NFT community users to jointly create and promote cooperation between different NFT projects.',
 	'https://envizion.world/'
 	'0xD0ee34dA6cce460152840fbA08348fc19f5a1A18',
 	'https://cdn.discordapp.com/attachments/924409140485423144/1016671092338851840/0011.png',
 	'https://cdn.discordapp.com/attachments/924409140485423144/1016671092573745273/0021.png'
-)
+),
+( 
+	1662727866, -- 9th sept
+	1672002558, -- 25th dec
+	'Become part of the storyline created by award-winning filmmakers that unravels the secrets of The Soulless Citadel in Chapters. Chapter 2: The Rise of the Women Warriors minting soon!'
+	'The Soulless Citadel is a cinematic universe around a meticulously designed storyline created by award-winning filmmakers— supported by unique and verifiable NFTs across multiple Blockchains. After partnering up with the leading development team Quinence, and Hollywood screenwriters Janet and Lee Batchler, they are now building their universe in Chapters. As Chapter 1, the Soulless Citadel, launched and sold out in February, had great success, they began moving onto Chapter 2, The Rise of the Women Warriors.
+
+
+Mint date: 30 Sept, 2022.
+
+Collection size: 5555.
+
+WL Mint price: $63 (1750 ZIL)
+
+Public Mint price: $80 (2250 ZIL)
+
+
+IMPORTANT INFO: Mint will be one-click with debit/credit card/Apple/Google Pay, no extra steps or verification needed. No need to use ZIL unless you want to. WL available through community events and for Ch 1 holders, snapshot will be taken at a random time after 23rd Sept.',
+	'https://soullesscitadel.com/mint/chapter-2',
+	'',
+	'https://zmdownload-accl.zoho.eu/view?attachId=138820675202120040&entityType=1&entityId=1662774720042020001&accId=2755039000000002002',
+	'https://zmdownload-accl.zoho.eu/view?attachId=138820675202120050&entityType=1&entityId=1662774720042020001&accId=2755039000000002002'
+),
+(
+	1662727866, -- 9th sept
+	1672002558, -- 25th dec
+	'Alfie Members Club'
+	'Alfie the Crypto Butler! 👾 Manage your Zilliqa portfolio on one dashboard! By holding an Alfie NFT, users get access to premium features on the HeyAlfie dashboard. 😎',
+	'https://app.heyalfie.io/membership'
+	'0x63502ab7f13c5ba42d6f57e78471e8a95b608ce5',
+	'https://zmdownload-accl.zoho.eu/view?attachId=138822842230410040&entityType=1&entityId=1662991422932020001&accId=2755039000000002002',
+	'https://zmdownload-accl.zoho.eu/view?attachId=138822842230410050&entityType=1&entityId=1662991422932020001&accId=2755039000000002002'
+),
 ON CONFLICT DO NOTHING;
