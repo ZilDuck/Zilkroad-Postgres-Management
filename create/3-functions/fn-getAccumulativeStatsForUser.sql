@@ -7,6 +7,7 @@
 --
 -- 17-01-2022 - Nines - Inital creation.
 -- 18-08-2022 - Nines - Add lowercase casting for addresses
+-- 27-09-2022 - Nines - Fix temporary table logic
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getAccumulativeStatsForUser
 (
@@ -25,7 +26,7 @@ AS
 $BODY$
 BEGIN
 
-CREATE TEMP TABLE tmp_accum_data
+CREATE TEMPORARY TABLE tmp_accum_data
 (
     listing_count integer,
     delisting_count integer,
