@@ -7,14 +7,15 @@
 --
 -- 27-03-2022 - Nines - Inital creation.
 -- 22-08-2022 - Nines - Refine model
+-- 29-09-2022 - Nines - Expand varchars because utf8 consumes tons of space
 -------------------------------------------------------------------------------
 
 CREATE TABLE "tbl_advertise_card" (
 	advertise_card_id SERIAL PRIMARY KEY,
 	advertise_start_unixtime int8 NOT NULL,
 	advertise_end_unixtime int8 NOT NULL,
-	advertise_header varchar(30) NOT NULL,
-	advertise_description varchar(200) NOT NULL,
+	advertise_header varchar(100) NOT NULL,
+	advertise_description varchar(1000) NOT NULL,
     advertise_uri text NOT NULL,
 	nonfungible_address varchar(42), /* nullable */
 	desktop_image_uri text,    /* nullable */
