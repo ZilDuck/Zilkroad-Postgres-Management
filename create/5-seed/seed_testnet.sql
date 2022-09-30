@@ -36,7 +36,7 @@ values
 	'Non Fungible Ducks 3 : Project Feathers',
 	'With the release of Zilkroad, the last chapter in the NFD trilogy begins now. Firstly pioneering the first hyped ZRC-6 collection, then built the most open and robust marketplace, including a community indexer. Some efforts have moved to Project Feathers (NFT DeFi) and progress is faster than ever. Your key into the next degenerate play? You bet your feathery ass it is.',
 	'https://duck.community/',
-	'0x8ab2af0cccee7195a7c16030fbdfde6501d91903',
+	'0x75DC1D9d047303EC51B787869D44034E838a76Ed',
 	'https://cdn.discordapp.com/attachments/914536079225421904/1016067052949213325/ducks.png',
 	''
 ),
