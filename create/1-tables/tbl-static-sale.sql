@@ -17,7 +17,7 @@ CREATE TABLE "tbl_static_sale" (
 	buyer_address varchar(42) NULL,
 	royalty_recipient_address varchar(42) NULL,
 	tax_recipient_address varchar(42) NULL,
-	one_token_as_usd numeric(40,0) NOT NULL,
+	one_token_as_usd numeric(40,2) NOT NULL,
 	tax_amount_token numeric(40,0) NULL,
 	tax_amount_usd numeric(15, 2) NULL,
 	royalty_amount_token numeric(40,0) NULL,
