@@ -9,7 +9,7 @@
 -- 22-08-2022 - Nines - Refine model
 --
 -------------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION fn_getAllValidCardAdvertisements
+CREATE OR REPLACE FUNCTION fn_getCardAdvertisement
 (
 
 ) 
