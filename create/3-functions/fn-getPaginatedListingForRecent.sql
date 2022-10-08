@@ -30,40 +30,54 @@ AS
 $BODY$
 BEGIN
 
-    RETURN QUERY
-    select 
-        tsl.static_order_id,
-        tnt.token_id,
-        tnf.nonfungible_address,
-        tsl.listing_fungible_token_price,
-        tsl.listing_block,
-        tsl.listing_unixtime,
-        tsl.listing_user_address,
-        tf.fungible_name,
-        tf.fungible_symbol,
-        tf.decimals,
-        tf.fungible_address
-    FROM tbl_static_listing tsl 
-    left join tbl_static_sale tss
-    on tss.listing_id = tsl.listing_id
-    left join tbl_nonfungible_token tnt
-    on tnt.extract_nft_id = tsl.extract_nft_id
-    left join tbl_nonfungible tnf
-    on tnf.nonfungible_id = tnt.nonfungible_id 
-    left join tbl_fungible tf
-    on tf.fungible_id = tsl.fungible_id
-    left join tbl_static_delisting td 
-    on tsl.listing_id = td.delisting_id
-    left join tbl_exclude_contract ex 
-    on ex.nonfungible_id = tnt.nonfungible_id
-    AND tsl.static_order_id is not null
-    AND tss.static_sale_id is null
-    AND td.delisting_id is null
-    AND tsl.listing_id is not null
-    AND ex.exclude_id is null
-    order by tsl.static_order_id
-    LIMIT _limit_rows
-   	OFFSET _offset_rows;
+RETURN QUERY
+	SELECT
+		tsl.static_order_id,
+		tnt.token_id,
+		tnf.nonfungible_address,
+		tsl.listing_fungible_token_price,
+		tsl.listing_block,
+		tsl.listing_unixtime,
+		tsl.listing_user_address,
+		tf.fungible_name,
+		tf.fungible_symbol,
+		tf.decimals,
+		tf.fungible_address
+
+	FROM tbl_static_listing tsl
+
+	LEFT JOIN tbl_static_sale tss
+		ON tsl.listing_id = tss.listing_id
+
+	LEFT JOIN tbl_static_delisting tsd 
+		ON tsl.listing_id = tsd.listing_id
+
+	LEFT JOIN tbl_nonfungible_token tnt
+		ON tsl.extract_nft_id = tnt.extract_nft_id
+
+	LEFT JOIN tbl_nonfungible tnf
+		ON tnt.nonfungible_id = tnf.nonfungible_id
+
+	LEFT JOIN tbl_fungible tf
+		ON tsl.fungible_id = tf.fungible_id
+
+	LEFT JOIN tbl_exclude_contract tec
+		ON tnt.nonfungible_id = tec.nonfungible_id	
+
+
+	WHERE tsl.listing_id NOT IN (
+		SELECT listing_id
+		FROM tbl_static_delisting
+		UNION ALL
+		SELECT listing_id
+		FROM tbl_static_sale
+	)
+	AND tec.exclude_id IS NULL
+
+	ORDER BY tsl.static_order_id
+
+	LIMIT _limit_rows
+	OFFSET _offset_rows;
 
 END;
 $BODY$
