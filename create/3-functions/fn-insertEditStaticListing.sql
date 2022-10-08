@@ -7,16 +7,17 @@
 --
 -- 01-08-2022 - Nines - Inital creation.
 -- 13-08-2022 - Badman - Add secondary row logic 
+-- 21-09-2022 - Badman - Fix typos in types and duplicate end
 -------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION fn_insertEditStaticListing
 (
     _static_order_id integer,
-    _edit_listing_transaction_hash character varchar,
-    _previous_fungible_address character varchar,
-    _previous_fungible_token_price numeric,
-    _new_fungible_address character varchar,
-    _new_fungible_token_price numeric,
+    _edit_listing_transaction_hash varchar(66),
+    _previous_fungible_address varchar(42),
+    _previous_fungible_token_price numeric(40),
+    _new_fungible_address varchar(42),
+    _new_fungible_token_price numeric(40),
     _edit_listing_block numeric,
     _edit_listing_unixtime bigint
 )
@@ -139,10 +140,6 @@ BEGIN
                 listing_id = (select listing_id from tbl_static_listing where static_order_id = _static_order_id);
         END IF;
     END IF;
-
-END;
-$BODY$
-LANGUAGE plpgsql VOLATILE SECURITY DEFINER COST 100;
 
 END;
 $BODY$

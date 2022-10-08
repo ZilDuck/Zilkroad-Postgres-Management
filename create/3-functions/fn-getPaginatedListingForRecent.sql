@@ -7,7 +7,7 @@
 --
 -- 17-01-2022  Nines Inital creation.
 -------------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION fn_getPaginatedMostRecentListings
+CREATE OR REPLACE FUNCTION fn_getPaginatedListingForRecent
 (
 	_limit_rows numeric,
 	_offset_rows numeric

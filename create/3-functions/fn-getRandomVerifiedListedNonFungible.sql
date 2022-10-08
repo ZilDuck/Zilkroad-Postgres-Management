@@ -27,7 +27,8 @@ returns TABLE
     listing_transaction_hash varchar,
     listing_fungible_token_price numeric,
     listing_block numeric,
-    listing_unixtime int8
+    listing_unixtime int8,
+    verified boolean
 ) 
 AS 
 $BODY$
@@ -48,7 +49,8 @@ RETURN QUERY
         tsl.listing_transaction_hash,
         tsl.listing_fungible_token_price,
         tsl.listing_block,
-        tsl.listing_unixtime
+        tsl.listing_unixtime,
+        CASE WHEN tvc.verified_id IS NULL THEN False ELSE True END AS verified
     from tbl_verified_contract tvc
     left join tbl_nonfungible tnf
     on tvc.nonfungible_id = tnf.nonfungible_id

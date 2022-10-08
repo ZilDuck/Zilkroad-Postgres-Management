@@ -9,7 +9,7 @@
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getSoldTransactionHashForOrderID
 (
-    _static_order_id int8
+    _static_order_id bigint
 ) 
 RETURNS TABLE 
 (
@@ -20,11 +20,11 @@ $BODY$
 BEGIN
 
     RETURN QUERY
-        SELECT sale_transaction_hash 
+        SELECT tss.sale_transaction_hash 
         FROM tbl_static_sale tss
         LEFT JOIN tbl_static_listing tsl
         ON tss.listing_id = tsl.listing_id
-        WHERE static_order_id = _static_order_id; 
+        WHERE tsl.static_order_id = _static_order_id; 
 
 
 END;
