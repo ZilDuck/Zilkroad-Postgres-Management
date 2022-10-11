@@ -19,7 +19,8 @@ CREATE OR REPLACE FUNCTION fn_getPaginatedSearchForString
 ) 
 returns TABLE 
 (
-    result_action varchar, 
+    result_action varchar,
+    nonfungible_address varchar,
     nonfungible_symbol varchar, 
     result_text varchar,
     is_verified integer
@@ -31,6 +32,7 @@ BEGIN
 RETURN QUERY 
     select 
         concat('/collection/', tnf.nonfungible_address)::varchar as result_action, 
+	tnf.nonfungible_address,
         tnf.nonfungible_symbol, 
         tnf.nonfungible_name as result_text,
         tvc.verified_id as is_verified
