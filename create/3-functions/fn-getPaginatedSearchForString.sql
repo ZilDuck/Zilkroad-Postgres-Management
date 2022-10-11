@@ -19,10 +19,10 @@ CREATE OR REPLACE FUNCTION fn_getPaginatedSearchForString
 ) 
 returns TABLE 
 (
-    nonfungible_address varchar, 
+    result_action varchar, 
     nonfungible_symbol varchar, 
-    nonfungible_name varchar,
-    verified_id integer
+    result_text varchar,
+    is_verified integer
 ) 
 AS 
 $BODY$
@@ -30,10 +30,10 @@ BEGIN
 
 RETURN QUERY 
     select 
-        tnf.nonfungible_address, 
+        concat('/collection/', tnf.nonfungible_address)::varchar as result_action, 
         tnf.nonfungible_symbol, 
-        tnf.nonfungible_name,
-        tvc.verified_id
+        tnf.nonfungible_name as result_text,
+        tvc.verified_id as is_verified
     from tbl_nonfungible tnf
     left join tbl_nonfungible_token tnt
     on tnt.nonfungible_id = tnf.nonfungible_id
@@ -43,8 +43,8 @@ RETURN QUERY
     on tvc.nonfungible_id = tnf.nonfungible_id
     WHERE (
         tnf.simple_tsvector @@ to_tsquery('simple', _search_term)
-        OR SIMILARITY(tnf.nonfungible_name, _user_search) > 0.1
-        OR SIMILARITY(tnf.nonfungible_symbol, _user_search) > 0.1
+        OR SIMILARITY(tnf.nonfungible_name, _user_search) > 0.2
+        OR SIMILARITY(tnf.nonfungible_symbol, _user_search) > 0.2
         OR tnf.nonfungible_address like concat(_user_search, '%') 
     )
     AND ex.exclude_id is null
