@@ -31,7 +31,7 @@ BEGIN
 
 RETURN QUERY 
     select 
-        concat('/collection/', tnf.nonfungible_address)::varchar as result_action, 
+        concat('/collections/', tnf.nonfungible_address)::varchar as result_action, 
 	tnf.nonfungible_address,
         tnf.nonfungible_symbol, 
         tnf.nonfungible_name as result_text,
