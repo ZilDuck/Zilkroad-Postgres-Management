@@ -77,8 +77,8 @@ Public Mint price: $80 (2250 ZIL)
 IMPORTANT INFO: Mint will be one-click with debit/credit card/Apple/Google Pay, no extra steps or verification needed. No need to use ZIL unless you want to. WL available through community events and for Ch 1 holders, snapshot will be taken at a random time after 23rd Sept.',
 	'https://soullesscitadel.com/mint/chapter-2',
 	'',
-	'https://zmdownload-accl.zoho.eu/view?attachId=138820675202120040&entityType=1&entityId=1662774720042020001&accId=2755039000000002002',
-	'https://zmdownload-accl.zoho.eu/view?attachId=138820675202120050&entityType=1&entityId=1662774720042020001&accId=2755039000000002002'
+	'https://cdn.discordapp.com/attachments/924409140485423144/1031314001763766352/Women_warrior_Mint_date.png',
+	'https://cdn.discordapp.com/attachments/924409140485423144/1031314001407250432/Women_mint_date_squarer_file.png'
 ),
 (
 	0,
@@ -87,8 +87,8 @@ IMPORTANT INFO: Mint will be one-click with debit/credit card/Apple/Google Pay, 
 	'Alfie the Crypto Butler! 👾 Manage your Zilliqa portfolio on one dashboard! By holding an Alfie NFT, users get access to premium features on the HeyAlfie dashboard. 😎',
 	'https://app.heyalfie.io/membership',
 	'0x63502ab7f13c5ba42d6f57e78471e8a95b608ce5',
-	'https://zmdownload-accl.zoho.eu/view?attachId=138822842230410040&entityType=1&entityId=1662991422932020001&accId=2755039000000002002',
-	'https://zmdownload-accl.zoho.eu/view?attachId=138822842230410050&entityType=1&entityId=1662991422932020001&accId=2755039000000002002'
+	'https://cdn.discordapp.com/attachments/924409140485423144/1031312978940796938/Zilkroad_Ads_-_2448.png',
+	'https://cdn.discordapp.com/attachments/924409140485423144/1031312979637047296/Zilkroad_Ads_-_1200.png'
 );
 
 ON CONFLICT DO NOTHING;
