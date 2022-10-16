@@ -50,7 +50,7 @@ RETURN QUERY
         tsl.listing_fungible_token_price,
         tsl.listing_block,
         tsl.listing_unixtime,
-        CASE WHEN tvc.verified_id IS NULL THEN False ELSE True END AS verified
+        True AS verified
     from tbl_verified_contract tvc
     left join tbl_nonfungible tnf
     on tvc.nonfungible_id = tnf.nonfungible_id
