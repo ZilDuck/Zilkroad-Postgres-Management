@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 04-04-2022  Nines Inital creation.
+-- 16-10-2022  Rich fix address conversion
 -------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION fn_getVerifiedStatusForNonFungible
@@ -35,7 +36,7 @@ RETURN QUERY
     left join tbl_exclude_contract tsc
     on tnf.nonfungible_id = tsc.nonfungible_id
     where 
-        tnf.nonfungible_address = _nonfungible_address AND
+        lower(tnf.nonfungible_address) = lower(_nonfungible_address) AND
         tsc.exclude_id is null 
     group by
         tnf.nonfungible_address,
