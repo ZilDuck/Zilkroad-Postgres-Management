@@ -8,6 +8,7 @@
 -- 17-01-2022  Nines Inital creation.
 -- 16-07-2022  Rich Fix exclusions
 -- 28-09-2022  Rich Add extra information
+-- 16-10-2022  Rich fix exclude contract logic
 -------------------------------------------------------------------------------
 
 CREATE OR REPLACE FUNCTION fn_getPaginatedListingForUser
@@ -51,17 +52,17 @@ BEGIN
          
          FROM tbl_static_listing tsl
          
-         LEFT JOIN tbl_nonfungible_token tnt
+         INNER JOIN tbl_nonfungible_token tnt
             ON tsl.extract_nft_id = tnt.extract_nft_id
          
-         LEFT JOIN tbl_fungible tf
+         INNER JOIN tbl_fungible tf
             ON tsl.fungible_id = tf.fungible_id
          
-         LEFT JOIN tbl_nonfungible tnf
+         INNER JOIN tbl_nonfungible tnf
             ON tnf.nonfungible_id = tnt.nonfungible_id
          
          LEFT JOIN tbl_exclude_contract ec
-            ON ec.nonfungible_id = tf.fungible_id
+            ON ec.nonfungible_id = tnf.nonfungible_id
          
          LEFT JOIN tbl_verified_contract tvc
             ON tnf.nonfungible_id = tvc.nonfungible_id
@@ -72,7 +73,7 @@ BEGIN
             SELECT listing_id FROM tbl_static_sale
          )
          AND ec.exclude_id IS NULL
-         AND tsl.listing_user_address = _listing_user_address
+         AND lower(tsl.listing_user_address) = lower(_listing_user_address)
          
          LIMIT _limit_rows OFFSET _offset_rows;
 
