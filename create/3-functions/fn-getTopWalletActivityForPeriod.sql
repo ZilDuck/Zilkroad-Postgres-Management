@@ -43,8 +43,8 @@ RETURN QUERY
     union 
     (
         select 
-            SUM(tss.final_sale_after_taxes_usd) as usd_value, 
-            COUNT(tss.final_sale_after_taxes_usd) as quantity,
+            SUM(tss.final_sale_after_taxes_usd - tss.royalty_amount_usd) as usd_value, 
+            COUNT(tss.final_sale_after_taxes_usd - tss.royalty_amount_usd) as quantity,
             tsl.listing_user_address as address,
             'Seller' as text
             from tbl_static_listing tsl
