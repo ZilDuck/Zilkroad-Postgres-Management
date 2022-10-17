@@ -16,7 +16,7 @@
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForUser
 (
-    _listing_user_address varchar(42),
+	_listing_user_address varchar(42),
 	_limit_rows numeric,
 	_offset_rows numeric
 ) 
@@ -31,7 +31,9 @@ returns TABLE
 	price numeric(40,0),
 	royalty_amount numeric(40,0),
 	previous_price numeric(40,0),
-	previous_symbol varchar
+	previous_symbol varchar,
+	tax_amount numeric(40,0),
+	output numeric(40,0)
 ) 
 AS 
 $BODY$
@@ -76,8 +78,8 @@ BEGIN
 		0 as royalty_amount,
 		0 as previous_price,
 		'NULL' as previous_symbol,
-		tss.tax_amount_token as tax_amount,
-		tss.final_sale_after_taxes_tokens as output
+		0 as tax_amount,
+		0 as output
 
 	FROM tbl_static_listing tsl
 
@@ -107,8 +109,8 @@ BEGIN
 		0 as royalty_amount,
 		tsel.previous_fungible_token_price as previous_price,
 		(SELECT fungible_symbol from tbl_fungible where fungible_id in (SELECT previous_fungible_id FROM tbl_static_edit_listing where edit_listing_id = tsel.edit_listing_id)) as previous_symbol,
-		tss.tax_amount_token as tax_amount,
-		tss.final_sale_after_taxes_tokens as output
+		0 as tax_amount,
+		0 as output
 
 	FROM tbl_static_listing tsl
 
@@ -140,8 +142,8 @@ BEGIN
 		0 as royalty_amount,
 		tsel.previous_fungible_token_price as previous_price,
 		(SELECT fungible_symbol from tbl_fungible where fungible_id in (SELECT previous_fungible_id FROM tbl_static_edit_listing where edit_listing_id = tsel.edit_listing_id)) as previous_symbol,
-		tss.tax_amount_token as tax_amount,
-		tss.final_sale_after_taxes_tokens as output
+		0 as tax_amount,
+		0 as output
 
 	FROM tbl_static_listing tsl
 
@@ -174,8 +176,8 @@ BEGIN
 		0 as royalty_amount,
 		0 as previous_price,
 		'NULL' as previous_symbol,
-		tss.tax_amount_token as tax_amount,
-		tss.final_sale_after_taxes_tokens as output
+		0 as tax_amount,
+		0 as output
 
 	FROM tbl_static_delisting tsd
 
@@ -206,8 +208,8 @@ BEGIN
 		0 as royalty_amount,
 		0 as previous_price,
 		'NULL' as previous_symbol,
-		tss.tax_amount_token as tax_amount,
-		tss.final_sale_after_taxes_tokens as output
+		0 as tax_amount,
+		0 as output
 
 	FROM tbl_static_delisting tsd
 
