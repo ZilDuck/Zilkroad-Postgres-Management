@@ -7,7 +7,8 @@
 --
 -- 27-03-2022 Nines - Inital creation.
 -- 14-04-2022 Nines - Add unix filtering.
--- 01-07-2022 Rich  - Fix logic  
+-- 01-07-2022 Rich  - Fix logic 
+-- 20-10-2022 Nines - Fix group by to collate one row 
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedTopBuyers
 (
@@ -67,8 +68,7 @@ RETURN QUERY
     AND tsl.listing_unixtime BETWEEN _time_from AND _time_to
 
     GROUP BY 
-        tss.buyer_address,
-        tf.fungible_symbol
+        address
 
     ORDER BY sum(tss.final_sale_after_Taxes_usd) DESC
     LIMIT _limit_rows
