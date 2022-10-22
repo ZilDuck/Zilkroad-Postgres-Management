@@ -38,33 +38,35 @@ RETURN QUERY
 	LEFT JOIN tbl_static_listing tsl
 	ON tnft.extract_nft_id = tsl.extract_nft_id
 
-	WHERE nonfungible_address = _nonfungible_address
+	WHERE LOWER(nonfungible_address) = LOWER(_nonfungible_address)
 	AND listing_id not in (
-	SELECT tsd.listing_id from tbl_static_delisting tsd
-	LEFT JOIN tbl_static_listing tsl
-	ON tsd.listing_id = tsl.listing_id
+		SELECT tsd.listing_id from tbl_static_delisting tsd
+		
+		LEFT JOIN tbl_static_listing tsl
+			ON tsd.listing_id = tsl.listing_id
 
-	LEFT JOIN tbl_nonfungible_token tnft
-	ON tsl.extract_nft_id = tnft.extract_nft_id
+		LEFT JOIN tbl_nonfungible_token tnft
+			ON tsl.extract_nft_id = tnft.extract_nft_id
 
-	LEFT JOIN tbl_nonfungible tnf
-	ON tnft.nonfungible_id = tnf.nonfungible_id
+		LEFT JOIN tbl_nonfungible tnf
+			ON tnft.nonfungible_id = tnf.nonfungible_id
 
-	where nonfungible_address = _nonfungible_address
+		WHERE LOWER(nonfungible_address) = LOWER(_nonfungible_address)
 
 	UNION ALL 
 
-	SELECT tss.listing_id from tbl_static_sale tss
-	LEFT JOIN tbl_static_listing tsl
-	ON tss.listing_id = tsl.listing_id
+		SELECT tss.listing_id from tbl_static_sale tss
+		
+		LEFT JOIN tbl_static_listing tsl
+			ON tss.listing_id = tsl.listing_id
 
-	LEFT JOIN tbl_nonfungible_token tnft
-	ON tsl.extract_nft_id = tnft.extract_nft_id
+		LEFT JOIN tbl_nonfungible_token tnft
+			ON tsl.extract_nft_id = tnft.extract_nft_id
 
-	LEFT JOIN tbl_nonfungible tnf
-	ON tnft.nonfungible_id = tnf.nonfungible_id
+		LEFT JOIN tbl_nonfungible tnf
+			ON tnft.nonfungible_id = tnf.nonfungible_id
 
-	where nonfungible_address = _nonfungible_address
+		WHERE LOWER(nonfungible_address) = LOWER(_nonfungible_address)
 	)
 	
 	LIMIT _limit_rows
