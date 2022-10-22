@@ -6,6 +6,7 @@
 -- Modification History
 --
 -- 23-04-2022  Nines - Inital creation.
+-- 22-10-2022  Rich - fix casing for contract address
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getOrderIDForNonFungibleToken
 (
@@ -59,7 +60,7 @@ BEGIN
     left join tbl_static_sale tss
     on tss.listing_id = tsl.listing_id
     where
-        tnf.nonfungible_address = _nonfungible_address
+        lower(tnf.nonfungible_address) = lower(_nonfungible_address)
       AND tnt.token_id = _token_id
         AND td.delisting_id is null
         AND tsl.listing_id is not null
