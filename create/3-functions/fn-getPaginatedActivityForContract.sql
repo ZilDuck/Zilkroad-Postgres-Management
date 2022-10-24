@@ -32,6 +32,35 @@ $BODY$
 BEGIN
 	RETURN QUERY
 
+	-- LISTED
+	WITH FIRST_LISTINGS AS (
+		SELECT
+			edit_listing_id,
+			listing_id
+		FROM 
+			(
+				SELECT edit_listing_id,
+					tsel.listing_id,
+					ROW_NUMBER() OVER (
+						PARTITION BY tsel.listing_id
+						ORDER BY MAX(edit_listing_unixtime) ASC
+					) AS rn
+
+				FROM tbl_nonfungible tnf 
+				INNER JOIN tbl_nonfungible_token tnft
+				   ON tnft.nonfungible_id = tnf.nonfungible_id
+				INNER JOIN tbl_static_listing tsl
+                   ON tsl.extract_nft_id = tnft.extract_nft_id
+				INNER JOIN tbl_static_edit_listing tsel 
+					ON tsl.listing_id = tsel.listing_id
+
+				WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
+
+				GROUP BY edit_listing_id, tsel.listing_id
+			) AS t
+		WHERE rn = 1
+	)
+
 	-- Get listings that haven't been edited
 	SELECT 
 		'Listed'::varchar as activity,
@@ -57,6 +86,7 @@ BEGIN
 		ON tsl.fungible_id = tf.fungible_id
 
 	WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
+	AND tsl.listing_id NOT IN (SELECT listing_id FROM FIRST_LISTINGS)
 
 	UNION ALL
 
@@ -87,7 +117,8 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address) -- for a user
+	WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
+	AND tsel.edit_listing_id IN (SELECT edit_listing_id FROM FIRST_LISTINGS)
 
 	UNION ALL
 
