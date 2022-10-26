@@ -1,22 +1,17 @@
 -------------------------------------------------------------------------------
--- Created      08-01-2022
+-- Created      24-10-2022
 -- Purpose      Gets the paginated listing/delisting/sold activity for a particular user
+--              Copies the logic from ActivityForUser, but removes some unions
 -- Copyright © 2022, Zilkroad, All Rights Reserved
 -------------------------------------------------------------------------------
 -- Modification History
 --
--- 08-01-2022 - Nines - Inital creation.
--- 04-06-2022 - Badman - Refactor return data and query
--- 06-06-2022 - Nines - Add AdminReturn/UpgradeMarketplace history row
--- 08-08-2022 - Badman - Fix logic for wallet search
--- 13-08-2022 - Nines - Add Edit Price logic with new columns, Add tx hash for all activties
--- 17-08-2022 - Nines - Add Royalties
--- 17-08-2022 - Badman - Fix listing and edit to retain original prices
+-- 24-10-2022 - Nines - Inital creation
 -- 26-10-2022 - Nines - Add tax and output
 -------------------------------------------------------------------------------
-CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForUser
+CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForContract
 (
-    _listing_user_address varchar(42),
+    _contract_address varchar(42),
 	_limit_rows numeric,
 	_offset_rows numeric
 ) 
@@ -34,8 +29,8 @@ returns TABLE
 	output numeric(40,0),
 	previous_price numeric(40,0),
 	previous_symbol varchar
-) 
-AS 
+)
+AS
 $BODY$
 BEGIN
 	RETURN QUERY
@@ -54,12 +49,15 @@ BEGIN
 						ORDER BY MAX(edit_listing_unixtime) ASC
 					) AS rn
 
-				FROM tbl_static_listing tsl
-
+				FROM tbl_nonfungible tnf 
+				INNER JOIN tbl_nonfungible_token tnft
+				   ON tnft.nonfungible_id = tnf.nonfungible_id
+				INNER JOIN tbl_static_listing tsl
+                   ON tsl.extract_nft_id = tnft.extract_nft_id
 				INNER JOIN tbl_static_edit_listing tsel 
 					ON tsl.listing_id = tsel.listing_id
 
-				WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address)
+				WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
 
 				GROUP BY edit_listing_id, tsel.listing_id
 			) AS t
@@ -92,7 +90,7 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address)
+	WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
 	AND tsl.listing_id NOT IN (SELECT listing_id FROM FIRST_LISTINGS)
 
 	UNION ALL
@@ -126,42 +124,8 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address) -- for a user
+	WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
 	AND tsel.edit_listing_id IN (SELECT edit_listing_id FROM FIRST_LISTINGS)
-
-	UNION ALL
-
-	SELECT
-		'Edit Price'::varchar as activity,
-		tsel.edit_listing_transaction_hash as tx_hash,
-		tsel.edit_listing_unixtime as unixtime,
-		tnft.token_id as token_id,
-		tnf.nonfungible_address as contract,
-		tf.fungible_symbol as current_symbol,
-		tsel.new_fungible_token_price as price,
-		0 as royalty_amount,
-		0 as tax_amount,
-		0 as output,
-		tsel.previous_fungible_token_price as previous_price,
-		(SELECT fungible_symbol from tbl_fungible where fungible_id in (SELECT previous_fungible_id FROM tbl_static_edit_listing where edit_listing_id = tsel.edit_listing_id)) as previous_symbol
-
-	FROM tbl_static_listing tsl
-
-	LEFT JOIN tbl_static_edit_listing tsel
-		ON tsl.listing_id = tsel.listing_id
-
-	LEFT JOIN tbl_nonfungible_token tnft
-		ON tsl.extract_nft_id = tnft.extract_nft_id
-
-	LEFT JOIN tbl_nonfungible tnf
-		ON tnft.nonfungible_id = tnf.nonfungible_id
-
-	LEFT JOIN tbl_fungible tf
-		ON tsl.fungible_id = tf.fungible_id
-
-	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address) -- for a user
-	AND tsel.edit_listing_id is not null -- where we have edit rows that aren't joined with a null row
-	AND tsel.previous_fungible_token_price != 0 -- and don't count the first row that starts 0,NULL -> x,y
 
 	UNION ALL
 
@@ -174,6 +138,8 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		0 as royalty_amount,
+		0 as tax_amount,
+		0 as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -191,7 +157,7 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address)
+	WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
 
 	UNION ALL
 
@@ -223,23 +189,13 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address)
-
+	WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
 
 	UNION ALL
 
 	SELECT
-		CAST(
-			CASE
-				WHEN LOWER(buyer_address) != LOWER(_listing_user_address)
-				OR (
-					LOWER(buyer_address) = LOWER(_listing_user_address)
-					AND LOWER(listing_user_address) = LOWER(_listing_user_address)
-				) THEN 'Sold' 
-			END
-			AS varchar
-		) AS activity,
-                tss.sale_transaction_hash,
+		'Sale'::varchar AS activity,
+		tss.sale_transaction_hash,
 		tss.sale_unixtime as unixtime,
 		tnft.token_id as token_id,
 		tnf.nonfungible_address as contract,
@@ -265,77 +221,7 @@ BEGIN
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-	WHERE LOWER(tsl.listing_user_address) = LOWER(_listing_user_address)
-
-	UNION ALL
-
-	SELECT
-		CAST(
-			CASE
-				WHEN LOWER(tss.buyer_address) = LOWER(_listing_user_address) THEN 'Bought'
-				WHEN LOWER(tss.buyer_address) = LOWER(_listing_user_address) AND LOWER(tsl.listing_user_address) = LOWER(_listing_user_address) THEN 'Bought' 
-			END 
-			AS varchar
-		) AS activity,
-                tss.sale_transaction_hash,
-		tss.sale_unixtime as unixtime,
-		tnft.token_id as token_id,
-		tnf.nonfungible_address as contract,
-		tf.fungible_symbol as price_symbol,
-		tsl.listing_fungible_token_price as price,
-		tss.royalty_amount_token as royalty_amount,
-		tss.tax_amount_token as tax_amount,
-		tss.final_sale_after_taxes_tokens as output,
-		0 as previous_price,
-		'NULL' as previous_symbol
-
-	FROM tbl_static_sale tss
-
-	LEFT JOIN tbl_static_listing tsl
-		ON tss.listing_id = tsl.listing_id
-
-	LEFT JOIN tbl_nonfungible_token tnft
-		ON tsl.extract_nft_id = tnft.extract_nft_id
-
-	LEFT JOIN tbl_nonfungible tnf
-		ON tnft.nonfungible_id = tnf.nonfungible_id
-
-	LEFT JOIN tbl_fungible tf
-		ON tsl.fungible_id = tf.fungible_id
-
-	WHERE LOWER(tss.buyer_address) = LOWER(_listing_user_address)
-
-	UNION ALL
-
-    SELECT
-        'Royalties'::varchar as activity,
-        tss.sale_transaction_hash,
-        tss.sale_unixtime as unixtime,
-        tnft.token_id as token_id,
-        tnf.nonfungible_address as contract,
-        tf.fungible_symbol as price_symbol,
-        tsl.listing_fungible_token_price as price,
-        tss.royalty_amount_token as royalty_amount,
-		0 as tax_amount,
-		0 as output,
-        0 as previous_price,
-        'NULL' as previous_symbol
-
-    FROM tbl_static_sale tss
-
-    LEFT JOIN tbl_static_listing tsl
-        ON tss.listing_id = tsl.listing_id
-
-    LEFT JOIN tbl_nonfungible_token tnft
-        ON tsl.extract_nft_id = tnft.extract_nft_id
-
-    LEFT JOIN tbl_nonfungible tnf
-        ON tnft.nonfungible_id = tnf.nonfungible_id
-
-    LEFT JOIN tbl_fungible tf
-        ON tsl.fungible_id = tf.fungible_id
-
-    WHERE LOWER(tss.royalty_recipient_address) = LOWER(_listing_user_address)
+	WHERE LOWER(tnf.nonfungible_address) = LOWER(_contract_address)
 
 	ORDER BY unixtime DESC
 	LIMIT _limit_rows
