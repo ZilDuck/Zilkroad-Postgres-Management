@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Created      08-01-2022
+-- Created      24-10-2022
 -- Purpose      Gets the paginated listing/delisting/sold activity for a particular user
 --              Copies the logic from ActivityForUser, but removes some unions
 -- Copyright © 2022, Zilkroad, All Rights Reserved
@@ -7,6 +7,7 @@
 -- Modification History
 --
 -- 24-10-2022 - Nines - Inital creation
+-- 26-10-2022 - Nines - Add tax and output
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForContract
 (
@@ -24,10 +25,12 @@ returns TABLE
 	price_symbol varchar,
 	price numeric(40,0),
 	royalty_amount numeric(40,0),
+	tax_amount numeric(40,0),
+	output numeric(40,0),
 	previous_price numeric(40,0),
 	previous_symbol varchar
-) 
-AS 
+)
+AS
 $BODY$
 BEGIN
 	RETURN QUERY
@@ -71,6 +74,8 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		0 as royalty_amount,
+		0 as tax_amount,
+		0 as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -100,6 +105,8 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsel.new_fungible_token_price as price,
 		0 as royalty_amount,
+		0 as tax_amount,
+		0 as output,
 		tsel.previous_fungible_token_price as previous_price,
 		(SELECT fungible_symbol from tbl_fungible where fungible_id in (SELECT previous_fungible_id FROM tbl_static_edit_listing where edit_listing_id = tsel.edit_listing_id)) as previous_symbol
 
@@ -131,6 +138,8 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		0 as royalty_amount,
+		0 as tax_amount,
+		0 as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -161,6 +170,8 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		0 as royalty_amount,
+		0 as tax_amount,
+		0 as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -191,6 +202,8 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		tss.royalty_amount_token as royalty_amount,
+		tss.tax_amount_token as tax_amount,
+		tss.final_sale_after_taxes_tokens as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
