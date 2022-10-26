@@ -195,7 +195,7 @@ BEGIN
 
 	SELECT
 		'Sale'::varchar AS activity,
-		tss.sale_transaction_hash,
+		tss.sale_transaction_hash as tx_hash,
 		tss.sale_unixtime as unixtime,
 		tnft.token_id as token_id,
 		tnf.nonfungible_address as contract,

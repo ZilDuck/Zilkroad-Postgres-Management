@@ -12,7 +12,6 @@
 -- 13-08-2022 - Nines - Add Edit Price logic with new columns, Add tx hash for all activties
 -- 17-08-2022 - Nines - Add Royalties
 -- 17-08-2022 - Badman - Fix listing and edit to retain original prices
--- 26-10-2022 - Nines - Add tax and output
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPaginatedActivityForUser
 (
@@ -30,8 +29,6 @@ returns TABLE
 	price_symbol varchar,
 	price numeric(40,0),
 	royalty_amount numeric(40,0),
-	tax_amount numeric(40,0),
-	output numeric(40,0),
 	previous_price numeric(40,0),
 	previous_symbol varchar
 ) 
@@ -76,8 +73,6 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		0 as royalty_amount,
-		0 as tax_amount,
-		0 as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -107,8 +102,6 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsel.new_fungible_token_price as price,
 		0 as royalty_amount,
-		0 as tax_amount,
-		0 as output,
 		tsel.previous_fungible_token_price as previous_price,
 		(SELECT fungible_symbol from tbl_fungible where fungible_id in (SELECT previous_fungible_id FROM tbl_static_edit_listing where edit_listing_id = tsel.edit_listing_id)) as previous_symbol
 
@@ -140,8 +133,6 @@ BEGIN
 		tf.fungible_symbol as current_symbol,
 		tsel.new_fungible_token_price as price,
 		0 as royalty_amount,
-		0 as tax_amount,
-		0 as output,
 		tsel.previous_fungible_token_price as previous_price,
 		(SELECT fungible_symbol from tbl_fungible where fungible_id in (SELECT previous_fungible_id FROM tbl_static_edit_listing where edit_listing_id = tsel.edit_listing_id)) as previous_symbol
 
@@ -174,6 +165,8 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		0 as royalty_amount,
+		0 as tax_amount,
+		0 as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -204,8 +197,6 @@ BEGIN
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		0 as royalty_amount,
-		0 as tax_amount,
-		0 as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -239,15 +230,13 @@ BEGIN
 			END
 			AS varchar
 		) AS activity,
-                tss.sale_transaction_hash,
+		tss.sale_transaction_hash as tx_hash,
 		tss.sale_unixtime as unixtime,
 		tnft.token_id as token_id,
 		tnf.nonfungible_address as contract,
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		tss.royalty_amount_token as royalty_amount,
-		tss.tax_amount_token as tax_amount,
-		tss.final_sale_after_taxes_tokens as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -277,15 +266,13 @@ BEGIN
 			END 
 			AS varchar
 		) AS activity,
-                tss.sale_transaction_hash,
+		tss.sale_transaction_hash as tx_hash,
 		tss.sale_unixtime as unixtime,
 		tnft.token_id as token_id,
 		tnf.nonfungible_address as contract,
 		tf.fungible_symbol as price_symbol,
 		tsl.listing_fungible_token_price as price,
 		tss.royalty_amount_token as royalty_amount,
-		tss.tax_amount_token as tax_amount,
-		tss.final_sale_after_taxes_tokens as output,
 		0 as previous_price,
 		'NULL' as previous_symbol
 
@@ -309,15 +296,13 @@ BEGIN
 
     SELECT
         'Royalties'::varchar as activity,
-        tss.sale_transaction_hash,
+        tss.sale_transaction_hash as tx_hash,
         tss.sale_unixtime as unixtime,
         tnft.token_id as token_id,
         tnf.nonfungible_address as contract,
         tf.fungible_symbol as price_symbol,
         tsl.listing_fungible_token_price as price,
         tss.royalty_amount_token as royalty_amount,
-		0 as tax_amount,
-		0 as output,
         0 as previous_price,
         'NULL' as previous_symbol
 
