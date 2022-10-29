@@ -19,7 +19,6 @@ CREATE OR REPLACE FUNCTION fn_getPaginatedSearchForString
 ) 
 returns TABLE 
 (
-    result_action varchar,
     nonfungible_address varchar,
     nonfungible_symbol varchar, 
     result_text varchar,
@@ -31,7 +30,6 @@ BEGIN
 
 RETURN QUERY 
     select 
-        concat('/collections/', tnf.nonfungible_address)::varchar as result_action, 
 	tnf.nonfungible_address,
         tnf.nonfungible_symbol, 
         tnf.nonfungible_name as result_text,
