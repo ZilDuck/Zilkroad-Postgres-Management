@@ -33,7 +33,7 @@ select
     tpc.proxy_beneficiary_address,	
     tpc.proxy_open_mint_block
 from tbl_proxy_contract tpc
-where tpc.proxy_nonfungible_address = _nonfungible_address
+where tpc.proxy_nonfungible_address = LOWER(_nonfungible_address)
 LIMIT 1;
 
 END;

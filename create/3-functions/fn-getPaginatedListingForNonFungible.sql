@@ -56,7 +56,7 @@ BEGIN
     left join tbl_exclude_contract ex 
     on ex.nonfungible_id = tnt.nonfungible_id
     where
-    tnf.nonfungible_address = _nonfungible_address
+    tnf.nonfungible_address = LOWER(_nonfungible_address)
     AND td.delisting_id is null
     AND tsl.listing_id is not null
     AND ex.exclude_id is null

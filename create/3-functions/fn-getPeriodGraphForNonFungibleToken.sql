@@ -34,7 +34,7 @@ RETURN QUERY
     on tnt.extract_nft_id = tsl.extract_nft_id
     left join tbl_nonfungible tnf
     on tnf.nonfungible_id = tnt.nonfungible_id 
-    where tnf.nonfungible_address = _nonfungible_address 
+    where tnf.nonfungible_address = LOWER(_nonfungible_address) 
     AND tnt.token_id = _token_id
     AND tss.sale_unixtime between _time_from and _time_to
     AND tsl.static_order_id is not null
