@@ -36,7 +36,7 @@ values
 	'Non Fungible Ducks 3 : Project Feathers',
 	'With the release of Zilkroad, the last chapter in the NFD trilogy begins now. Firstly pioneering the first hyped ZRC-6 collection, then built the most open and robust marketplace, including a community indexer. Some efforts have moved to Project Feathers (NFT DeFi) and progress is faster than ever. Your key into the next degenerate play? You bet your feathery ass it is.',
 	'https://duck.community/',
-	'0x75DC1D9d047303EC51B787869D44034E838a76Ed',
+	'zil1whwpm8gywvp7c5dhs7rf63qrf6pc5ahdgudn55',
 	'https://cdn.discordapp.com/attachments/914536079225421904/1016067052949213325/ducks.png',
 	''
 ),
@@ -46,7 +46,7 @@ values
 	'Bizarre Biomes',
 	'Bizarre Biomes (BB) was a project by Duck team to support funding for the community indexer `zildexer.com`. BB launched with 43.3% supply being airdropped to Duck holders and LPers. To date, BB has the record for most tokens freely distributed for no cost.',
 	'https://bizarrebiomes.com/',
-	'0x38c30391667d178e982af3a14e8bd2aa00efc771',
+	'zil1nnkpx4agts4zp6fay6hj4f7klewx52wp95ejyt',
 	'https://cdn.discordapp.com/attachments/914536079225421904/1016067052609470545/biomes.png',
 	''
 ),
@@ -56,29 +56,19 @@ values
 	'Envizion : Tell stories the web3 way.',
 	'Envizion provides a platform for NFTs to expand their storytelling ability, enabling NFT community users to jointly create and promote cooperation between different NFT projects.',
 	'https://envizion.world/',
-	'0xD0ee34dA6cce460152840fbA08348fc19f5a1A18',
+	'zil16rhrfknveerqz55yp7aqsdy0cx045xscg55w6c',
 	'https://cdn.discordapp.com/attachments/924409140485423144/1016671092338851840/0011.png',
 	'https://cdn.discordapp.com/attachments/924409140485423144/1016671092573745273/0021.png'
 ),
 ( 
 	0,
 	292277026590,
-	'Become part of the storyline. Chapter 2: The Rise of the Women Warriors minting soon!',
-	'The Soulless Citadel is a cinematic universe around a meticulously designed storyline created by award-winning filmmakers— supported by unique and verifiable NFTs across multiple Blockchains. After partnering up with the leading development team Quinence, and Hollywood screenwriters Janet and Lee Batchler, they are now building their universe in Chapters. As Chapter 1, the Soulless Citadel, launched and sold out in February, had great success, they began moving onto Chapter 2, The Rise of the Women Warriors.
-
-Mint date: 30 Sept, 2022.
-
-Collection size: 5555.
-
-WL Mint price: $63 (1750 ZIL)
-
-Public Mint price: $80 (2250 ZIL)
-
-IMPORTANT INFO: Mint will be one-click with debit/credit card/Apple/Google Pay, no extra steps or verification needed. No need to use ZIL unless you want to. WL available through community events and for Ch 1 holders, snapshot will be taken at a random time after 23rd Sept.',
+	'Become part of the Legend.',
+	'The Soulless Citadel is a cinematic universe around a meticulously designed storyline created by award-winning filmmakers and supported by unique and verifiable NFTs.',
 	'https://soullesscitadel.com/mint/chapter-2',
-	'',
-	'https://cdn.discordapp.com/attachments/924409140485423144/1031314001763766352/Women_warrior_Mint_date.png',
-	'https://cdn.discordapp.com/attachments/924409140485423144/1031314001407250432/Women_mint_date_squarer_file.png'
+	'zil13fum43ax8qeprt5s9u6wsmrtw2vsvdrdhmvtrm',
+	'https://cdn.discordapp.com/attachments/954800274491461702/1036624875386851400/IMG_0427_2.PNG',
+	'https://cdn.discordapp.com/attachments/954800274491461702/1036624875760123974/IMG_0428.PNG'
 ),
 (
 	0,
@@ -86,7 +76,7 @@ IMPORTANT INFO: Mint will be one-click with debit/credit card/Apple/Google Pay, 
 	'Alfie Members Club',
 	'Alfie the Crypto Butler! 👾 Manage your Zilliqa portfolio on one dashboard! By holding an Alfie NFT, users get access to premium features on the HeyAlfie dashboard. 😎',
 	'https://app.heyalfie.io/membership',
-	'0x63502ab7f13c5ba42d6f57e78471e8a95b608ce5',
+	'zil1vdgz4dl383d6gtt02lncgu0g49dkpr899qwlmn',
 	'https://cdn.discordapp.com/attachments/924409140485423144/1031312978940796938/Zilkroad_Ads_-_2448.png',
 	'https://cdn.discordapp.com/attachments/924409140485423144/1031312979637047296/Zilkroad_Ads_-_1200.png'
 );
