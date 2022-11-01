@@ -5,8 +5,9 @@
 -------------------------------------------------------------------------------
 -- Modification History
 --
--- 23-04-2022  Nines - Inital creation.
--- 22-10-2022  Rich - fix casing for contract address
+-- 23-04-2022 Nines - Inital creation.
+-- 22-10-2022 Rich - fix casing for contract address
+-- 01-11-2022 Nines - fix delisting logic to inner join
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getOrderIDForNonFungibleToken
 (
@@ -53,7 +54,7 @@ BEGIN
     on tnt.extract_nft_id = tsl.extract_nft_id
     left join tbl_fungible tf
     on tf.fungible_id = tsl.fungible_id
-    left join tbl_static_delisting td 
+    inner join tbl_static_delisting td 
     on tsl.listing_id = td.delisting_id
     left join tbl_exclude_contract ex 
     on ex.nonfungible_id = tnt.nonfungible_id
