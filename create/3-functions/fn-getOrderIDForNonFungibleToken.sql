@@ -7,6 +7,7 @@
 --
 -- 23-04-2022  Nines - Inital creation.
 -- 22-10-2022  Rich - fix casing for contract address
+-- 02-11-2022  Rich - fix for delisted/sold events
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getOrderIDForNonFungibleToken
 (
@@ -53,19 +54,20 @@ BEGIN
     on tnt.extract_nft_id = tsl.extract_nft_id
     left join tbl_fungible tf
     on tf.fungible_id = tsl.fungible_id
-    left join tbl_static_delisting td 
-    on tsl.listing_id = td.delisting_id
     left join tbl_exclude_contract ex 
     on ex.nonfungible_id = tnt.nonfungible_id
-    left join tbl_static_sale tss
-    on tss.listing_id = tsl.listing_id
     where
         lower(tnf.nonfungible_address) = lower(_nonfungible_address)
       AND tnt.token_id = _token_id
-        AND td.delisting_id is null
-        AND tsl.listing_id is not null
-        AND ex.exclude_id is null
-        AND tss.static_sale_id is null
+      AND ex.exclude_id is null
+      AND tsl.listing_id NOT IN (
+          SELECT listing_id
+          FROM tbl_static_delisting
+          
+          UNION
+          SELECT listing_id
+          FROM tbl_static_sale
+      )
     LIMIT 1;
 
 END;
