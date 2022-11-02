@@ -5,7 +5,8 @@
 -------------------------------------------------------------------------------
 -- Modification History
 --
--- 07-05-2022  Rich Inital creation.
+-- 07-05-2022  Rich  - Inital creation.
+-- 02-11-2022  Nines - Replaced contract with buyer/seller
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getNonFungibleTokenSalesHistory
 (
@@ -16,7 +17,8 @@ returns TABLE
 (
     activity varchar,
 	unixtime int8,
-	contract varchar,
+	seller varchar,
+	buyer varchar,
 	price_symbol varchar,
 	price numeric(40,0)
 ) 
@@ -27,7 +29,8 @@ BEGIN
 RETURN QUERY
     SELECT 'Buy'::varchar as activity,
     	sale_unixtime as unixtime,
-		nonfungible_address as contract,
+		tsl.listing_user_address as seller,
+		tss.buyer_address as buyer,
 		tf.fungible_symbol as price_symbol,
 		listing_fungible_token_price as price
 
