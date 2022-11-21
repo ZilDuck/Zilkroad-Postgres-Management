@@ -80,7 +80,7 @@ RETURN QUERY
   )
   AND tec.exclude_id IS NULL
 
-  ORDER BY tsl.static_order_id
+  ORDER BY tsl.listing_unixtime DESC
 
   LIMIT _limit_rows
   OFFSET _offset_rows;
