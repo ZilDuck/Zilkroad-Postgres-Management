@@ -1,0 +1,36 @@
+-------------------------------------------------------------------------------
+-- Created      26-11-2022
+-- Purpose      Given a nonfungible address, is it excluded?
+-- Copyright © 2022, Zilkroad, All Rights Reserved
+-------------------------------------------------------------------------------
+-- Modification History
+--
+-- 26-11-2022  Rich Inital creation.
+-------------------------------------------------------------------------------
+
+CREATE OR REPLACE FUNCTION fn_getExcludedStatusForNonFungible
+(
+	_nonfungible_address varchar
+)
+returns TABLE
+(
+	nonfungible_address varchar
+)
+AS
+$BODY$
+BEGIN
+
+RETURN QUERY
+	SELECT
+		tnf.nonfungible_address
+
+	FROM tbl_nonfungible tnf
+
+	INNER JOIN tbl_exclude_contract ec
+		ON tnf.nonfungible_id = ec.nonfungible_id
+
+	WHERE LOWER(tnf.nonfungible_address) = LOWER(_nonfungible_address);
+
+END;
+$BODY$
+LANGUAGE plpgsql VOLATILE SECURITY DEFINER COST 100;
