@@ -38,14 +38,14 @@ RETURN QUERY
     AND tnt.token_id = _token_id
     AND tss.sale_unixtime between _time_from and _time_to
     AND tsl.static_order_id is not null
-    AND tss.static_sale_id is not null
+    AND tss.listing_id is not null
     AND tsl.listing_id is not null
     group by tsl.static_order_id, 
     tss.sale_block,
     tss.sale_unixtime,      
     tss.tax_amount_usd,
     tss.final_sale_after_taxes_usd
-    order by sale_unixtime asc;
+    order by tsl.static_order_id;
 
 END;
 $BODY$
