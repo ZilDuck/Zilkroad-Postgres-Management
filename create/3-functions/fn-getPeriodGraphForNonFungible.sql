@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION fn_getPeriodGraphForNonFungible
 ) 
 returns TABLE 
 (
-    sale_unixtime int8,
+    unixtime int8,
     total_sale_usd numeric(15,2)
 ) 
 AS 
