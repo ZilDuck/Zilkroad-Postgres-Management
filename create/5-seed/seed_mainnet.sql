@@ -161,4 +161,14 @@ values
 	'https://cdn.discordapp.com/attachments/924409140485423144/1031312978940796938/Zilkroad_Ads_-_2448.png',
 	'https://cdn.discordapp.com/attachments/924409140485423144/1031312979637047296/Zilkroad_Ads_-_1200.png'
 ),
+(
+	0,
+	292277026590,
+	'Ignite : Torch Wallet',
+	'The main smart wallet for the Zilliqa Ecosystem. Autostaking, instant unstaking, limit orders and more.',
+	'https://ignitedao.io/',
+	'',
+	'https://cdn.discordapp.com/attachments/924409140485423144/1046880683622141992/image.png',
+	''
+);
 ON CONFLICT DO NOTHING;
