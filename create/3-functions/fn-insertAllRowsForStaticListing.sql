@@ -39,7 +39,7 @@ BEGIN
    
     IF NOT EXISTS 
     (
-        select nonfungible_id from tbl_nonfungible where nonfungible_address = _nonfungible_address
+        select nonfungible_id from tbl_nonfungible where nonfungible_address = LOWER(_nonfungible_address)
     )
     THEN
         -- 1 Add non fungible contract and get a nonfungible_id
@@ -65,7 +65,7 @@ BEGIN
         FROM tbl_nonfungible nf 
         left join tbl_nonfungible_token nft
         on nft.nonfungible_id = nf.nonfungible_id
-        WHERE nf.nonfungible_address = _nonfungible_address -- previously computed 1A, now exists for all tokens
+        WHERE nf.nonfungible_address = LOWER(_nonfungible_address) -- previously computed 1A, now exists for all tokens
         AND nft.token_id = _token_id 
         ORDER BY nft.extract_nft_id
         LIMIT 1
@@ -85,7 +85,7 @@ BEGIN
                 FROM tbl_nonfungible nf 
                 left join tbl_nonfungible_token nft
                 on nft.nonfungible_id = nf.nonfungible_id
-                WHERE nf.nonfungible_address = _nonfungible_address -- previously computed 1A, now exists for all tokens, wont know what the token id is first time
+                WHERE nf.nonfungible_address = LOWER(_nonfungible_address) -- previously computed 1A, now exists for all tokens, wont know what the token id is first time
                 group by nf.nonfungible_id
             ), 
             _token_id
@@ -113,7 +113,7 @@ BEGIN
             FROM tbl_nonfungible nf 
             left join tbl_nonfungible_token nft
             on nft.nonfungible_id = nf.nonfungible_id
-            WHERE nf.nonfungible_address = _nonfungible_address -- previously computed 1A, now exists for all tokens
+            WHERE nf.nonfungible_address = LOWER(_nonfungible_address) -- previously computed 1A, now exists for all tokens
             AND nft.token_id = _token_id                        -- previously computed 2A, now exists for all tokens
         ),
         (

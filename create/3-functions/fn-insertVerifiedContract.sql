@@ -20,7 +20,7 @@ BEGIN
 
     IF NOT EXISTS 
     (
-        SELECT nonfungible_id FROM tbl_nonfungible where nonfungible_address = _nonfungible_address
+        SELECT nonfungible_id FROM tbl_nonfungible where nonfungible_address = LOWER(_nonfungible_address)
     )
     THEN
         RAISE EXCEPTION 'Needs to be a valid nonfungible_address'; 
@@ -31,7 +31,7 @@ BEGIN
         )
         VALUES 
         (
-            (SELECT nonfungible_id FROM tbl_nonfungible where nonfungible_address = _nonfungible_address)
+            (SELECT nonfungible_id FROM tbl_nonfungible where nonfungible_address = LOWER(_nonfungible_address))
         );
    END IF;
 

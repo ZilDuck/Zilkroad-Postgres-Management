@@ -45,7 +45,7 @@ RETURN QUERY
 	LEFT JOIN tbl_fungible tf
 		ON tsl.fungible_id = tf.fungible_id
 
-    WHERE   tnf.nonfungible_address = _nonfungible_address
+    WHERE   tnf.nonfungible_address = LOWER(_nonfungible_address)
     AND     tnft.token_id = _token_id
     AND     tsl.listing_id NOT IN (
         SELECT listing_id

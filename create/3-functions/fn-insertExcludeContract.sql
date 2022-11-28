@@ -21,7 +21,7 @@ BEGIN
 
     IF NOT EXISTS 
     (
-        (select nonfungible_id from tbl_nonfungible where nonfungible_address = _nonfungible_address)
+        (select nonfungible_id from tbl_nonfungible where nonfungible_address = LOWER(_nonfungible_address))
     )
     THEN
 
@@ -47,7 +47,7 @@ BEGIN
     )
     values 
     (
-        (select nonfungible_id from tbl_nonfungible where nonfungible_address = _nonfungible_address)
+        (select nonfungible_id from tbl_nonfungible where nonfungible_address = LOWER(_nonfungible_address))
     );
 
 END;

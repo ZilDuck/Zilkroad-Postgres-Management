@@ -38,7 +38,7 @@ RETURN QUERY
     on tf.fungible_id = tsl.fungible_id
     left join tbl_exclude_contract ex 
     on ex.nonfungible_id = tnt.nonfungible_id
-    where tnf.nonfungible_address = _nonfungible_address
+    where tnf.nonfungible_address = LOWER(_nonfungible_address)
         AND tnt.token_id = _token_id
         AND tsl.static_order_id is not null
         AND tss.static_sale_id is not null
