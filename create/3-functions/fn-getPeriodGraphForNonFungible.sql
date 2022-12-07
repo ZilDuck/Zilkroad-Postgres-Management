@@ -5,7 +5,8 @@
 -------------------------------------------------------------------------------
 -- Modification History
 --
--- 27-03-2022  Nines Inital creation.
+-- 27-03-2022  Nines - Inital creation.
+-- 07-12-2022  Nines - Fix sorting order
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPeriodGraphForNonFungible
 (
@@ -43,7 +44,7 @@ RETURN QUERY
     tss.sale_unixtime,      
     tss.tax_amount_usd,
     tss.final_sale_after_taxes_usd
-    order by tsl.static_order_id;
+    order by tss.sale_unixtime;
 
 END;
 $BODY$
