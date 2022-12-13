@@ -1,0 +1,34 @@
+-------------------------------------------------------------------------------
+-- Created      13-12-2022
+-- Purpose      Gets excluded status for contracts
+-- Copyright © 2022, Zilkroad, All Rights Reserved
+-------------------------------------------------------------------------------
+-- Modification History
+--
+-- 13-12-2022 - Badman - Inital creation.
+-------------------------------------------------------------------------------
+CREATE OR REPLACE FUNCTION fn_getExcludedStatusForNonfungible
+(
+	_nonfungible_address varchar(42)
+)
+returns TABLE(
+	nonfungible_address varchar
+)
+AS
+$BODY$
+BEGIN
+
+	RETURN QUERY
+		SELECT
+			tnf.nonfungible_address
+
+		FROM tbl_nonfungible tnf
+
+		INNER JOIN tbl_exclude_contract ec
+			ON tnf.nonfungible_id = ec.nonfungible_id
+
+		WHERE LOWER(tnf.nonfungible_address) = LOWER(_nonfungible_address);
+
+END;
+$BODY$
+LANGUAGE plpgsql VOLATILE SECURITY DEFINER COST 100;
