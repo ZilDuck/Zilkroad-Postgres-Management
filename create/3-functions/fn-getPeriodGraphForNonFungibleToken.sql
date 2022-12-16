@@ -7,6 +7,7 @@
 --
 -- 27-03-2022  Nines - Inital creation.
 -- 07-12-2022  Nines - Fix sorting order
+-- 15-12-2022  Nines - Add volume columns based more on lightweight-charts
 -------------------------------------------------------------------------------
 CREATE OR REPLACE FUNCTION fn_getPeriodGraphForNonFungibleToken
 (
@@ -17,17 +18,22 @@ CREATE OR REPLACE FUNCTION fn_getPeriodGraphForNonFungibleToken
 ) 
 returns TABLE 
 (
-    unixtime int8,
-    price numeric(15,2)
+    date date,
+    max numeric(15,2),
+    average numeric(15,2),
+    min numeric(15,2),
+    volume numeric(15,2)
 ) 
 AS 
 $BODY$
 BEGIN
 
-RETURN QUERY    
-    select 
-        tss.sale_unixtime as unixtime,
-        SUM(tss.tax_amount_usd + tss.final_sale_after_taxes_usd) as price
+    SELECT 
+        DATE(to_timestamp(sale_unixtime / 1000)) as "date",
+        ROUND(MAX(tss.tax_amount_usd + tss.final_sale_after_taxes_usd), 2) as "max",
+        ROUND(AVG(tss.tax_amount_usd + tss.final_sale_after_taxes_usd), 2) as "average",
+        ROUND(MIN(tss.tax_amount_usd + tss.final_sale_after_taxes_usd), 2) as "min",
+        ROUND(SUM(tss.tax_amount_usd + tss.final_sale_after_taxes_usd), 2) as "volume"
     FROM tbl_static_listing tsl 
     left join tbl_static_sale tss
     on tss.listing_id = tsl.listing_id
@@ -40,13 +46,8 @@ RETURN QUERY
     AND tss.sale_unixtime between _time_from and _time_to
     AND tsl.static_order_id is not null
     AND tss.listing_id is not null
-    AND tsl.listing_id is not null
-    group by tsl.static_order_id, 
-    tss.sale_block,
-    tss.sale_unixtime,      
-    tss.tax_amount_usd,
-    tss.final_sale_after_taxes_usd
-    order by tss.sale_unixtime;
+    group by date
+    order by date;    
 
 END;
 $BODY$
