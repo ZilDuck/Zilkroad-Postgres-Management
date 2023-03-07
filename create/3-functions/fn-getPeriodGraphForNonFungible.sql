@@ -27,6 +27,7 @@ AS
 $BODY$
 BEGIN
 
+RETURN QUERY 
     SELECT 
         DATE(to_timestamp(sale_unixtime / 1000)) as "date",
         ROUND(MAX(tss.tax_amount_usd + tss.final_sale_after_taxes_usd), 2) as "max",
